@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TableRow>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25dp"
+            android:layout_weight="1"
+            android:textAlignment="textEnd"
+            android:id="@+id/viewID"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="25dp"
+            android:text="님 환영합니다."/>
+    </TableRow>
+    <TableRow>
+        <TextView android:textSize="30dp"/>
+    </TableRow>
+    <TableRow>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="나의 스펙"
+            android:textSize="20dp"
+            android:id="@+id/specBtn"/>
+    </TableRow>
+    <TableRow>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="스펙 등록"
+            android:textSize="20dp"
+            android:id="@+id/registBtn"
+            android:onClick="moveRegist"/>
+    </TableRow>
+    <TableRow>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="스펙 수정"
+            android:textSize="20dp"
+            android:id="@+id/modifyBtn"/>
+    </TableRow>
+    <TableRow>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="로그아웃"
+            android:textSize="20dp"
+            android:id="@+id/logoutBtn"
+            android:onClick="logOut"/>
+    </TableRow>
+</TableLayout>
