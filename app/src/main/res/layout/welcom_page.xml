@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TableRow>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+    <TableRow
+        android:paddingTop="100dp">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,41 +29,74 @@
         <TextView android:textSize="30dp"/>
     </TableRow>
     <TableRow>
-        <Button
+        <com.ornach.nobobutton.NoboButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="스펙 비교"
+            android:textSize="20dp"
+            android:id="@+id/compareBtn"
+            android:onClick="moveBarChart"
+            app:nb_text="스펙 비교"
+            android:layout_marginBottom="20dp"
+            app:nb_borderWidth="2dp"
+            app:nb_backgroundColor="#3F51B5"
+            app:nb_focusColor="#3989BA"
+            app:nb_textColor="@color/white"
+            app:nb_textSize="20sp"
+            app:nb_radius="5dp"/>
+    </TableRow>
+    <TableRow>
+        <com.ornach.nobobutton.NoboButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="나의 스펙"
             android:textSize="20dp"
-            android:id="@+id/specBtn"/>
+            android:id="@+id/specBtn"
+            app:nb_text="프로필 보기"
+            app:nb_textColor="#3F51B5"
+            android:layout_marginBottom="20dp"
+            app:nb_textSize="20sp"
+            app:nb_borderWidth="2dp"
+            app:nb_radius="5dp"/>
     </TableRow>
     <TableRow>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="스펙 등록"
-            android:textSize="20dp"
-            android:id="@+id/registBtn"
-            android:onClick="moveRegist"/>
-    </TableRow>
-    <TableRow>
-        <Button
+        <com.ornach.nobobutton.NoboButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="스펙 수정"
             android:textSize="20dp"
-            android:id="@+id/modifyBtn"/>
+            android:id="@+id/modifyBtn"
+            app:nb_text="프로필 수정"
+            android:layout_marginBottom="20dp"
+            app:nb_borderWidth="2dp"
+            app:nb_textColor="#3F51B5"
+            app:nb_radius="5dp"
+            app:nb_textSize="20sp"
+            />
     </TableRow>
     <TableRow>
-        <Button
+        <com.ornach.nobobutton.NoboButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="로그아웃"
             android:textSize="20dp"
             android:id="@+id/logoutBtn"
-            android:onClick="logOut"/>
+            android:onClick="logOut"
+            android:padding="10dp"
+            android:layout_marginBottom="20dp"
+            app:nb_text="로그아웃"
+            app:nb_borderColor="#EF3D56"
+            app:nb_borderWidth="2dp"
+            app:nb_textColor="#FFFFFF"
+            app:nb_backgroundColor="#EF3D56"
+            app:nb_focusColor="#FFFFF"
+            app:nb_radius="5dp"
+            app:nb_textSize="20sp"
+            />
     </TableRow>
-</TableLayout>
+    </TableLayout>
+</LinearLayout>

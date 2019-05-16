@@ -1,40 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TableRow>
-        <EditText
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/log_icon"/>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="아이디"
-            android:id="@+id/loginID"/>
-    </TableRow>
-    <TableRow>
-        <EditText
+            android:id="@+id/loginID"
+            app:met_floatingLabelAlwaysShown="true"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="이메일 계정"
+            app:met_floatingLabelAnimating="true"
+            app:met_singleLineEllipsis="true"
+            />
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="비밀번호"
             android:id="@+id/loginPW"
-            android:inputType="textPassword"/>
-    </TableRow>
-    <TableRow>
-        <Button
+            android:inputType="textPassword"
+            app:met_floatingLabelAlwaysShown="true"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="비밀번호"
+            app:met_floatingLabelAnimating="true"
+            android:layout_marginBottom="30dp"
+            app:met_singleLineEllipsis="true"
+            />
+        <com.dd.processbutton.iml.ActionProcessButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="로그인"
             android:id="@+id/loginBtn"
-            android:onClick="signIn"/>
-    </TableRow>
-    <TableRow>
-        <Button
+            android:onClick="signIn"
+            android:layout_marginBottom="16dp"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:pb_colorComplete="@color/green_complete"
+            app:pb_colorNormal="@color/blue_normal"
+            app:pb_colorPressed="@color/blue_pressed"
+            app:pb_colorProgress="@color/purple_progress"
+            app:pb_textComplete="로그인 성공"
+            app:pb_textProgress="Loading"
+            app:pb_textError="로그인 실패"
+            app:pb_colorError="@color/red_error" />
+        <com.dd.processbutton.iml.ActionProcessButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="회원가입"
             android:id="@+id/joinBtn"
-            android:onClick="signUp"/>
-    </TableRow>
-</TableLayout>
+            android:onClick="signUp"
+            android:layout_marginBottom="16dp"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:pb_colorComplete="@color/green_complete"
+            app:pb_colorNormal="@color/colorPrimary"
+            app:pb_colorPressed="@color/colorPrimaryDark"
+            app:pb_colorProgress="@color/purple_progress"
+            app:pb_textComplete="회원가입 성공"
+            app:pb_textProgress="Loading"
+            app:pb_textError="회원가입 실패"
+            app:pb_colorError="@color/red_error" />
+    </LinearLayout>
+</LinearLayout>

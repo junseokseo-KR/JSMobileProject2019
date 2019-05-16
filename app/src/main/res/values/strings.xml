@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">JSMobileProject2019</string>
+    <string name="app_name">차달남</string>
+    <string name="logout_icon">&#xf2f5;</string>
 </resources>

@@ -8,10 +8,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.ornach.nobobutton.NoboButton;
+
 public class WelecomActivity extends AppCompatActivity {
     TextView viewID;
     Intent intent;
-    String userID;
+    UserData user;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -19,28 +22,31 @@ public class WelecomActivity extends AppCompatActivity {
         setContentView(R.layout.welcom_page);
 
         intent = getIntent();
-        userID = intent.getExtras().getString("userID");
-        viewID = findViewById(R.id.viewID);
-        viewID.setText(userID);
+        user = (UserData) intent.getSerializableExtra("user");
 
-        Button getDB = findViewById(R.id.specBtn);
+        viewID = findViewById(R.id.viewID);
+        viewID.setText(user.getName());
+
+        NoboButton getDB = findViewById(R.id.specBtn);
         getDB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 intent = new Intent(WelecomActivity.this, MySpecActivity.class);
-                intent.putExtra("email", userID);
+                intent.putExtra("user", user);
                 startActivity(intent);
             }
         });
     }
-
-    public void moveRegist(View v){
-        intent = new Intent(WelecomActivity.this, SpecRegistActivity.class);
-        intent.putExtra("userID", userID);
+    //비교바차트 액티비티 이동
+    public void moveBarChart(View v){
+        intent = new Intent(WelecomActivity.this, SpecCompareBarChartActivity.class);
+        intent.putExtra("user", user);
         startActivity(intent);
     }
 
     public void logOut(View view){
-        finish();
+        FirebaseAuth.getInstance().signOut();
+        intent = new Intent(WelecomActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 }

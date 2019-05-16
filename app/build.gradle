@@ -29,6 +29,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:17.0.0'
     implementation 'com.google.firebase:firebase-database:17.0.0'
     implementation 'com.google.firebase:firebase-firestore:19.0.0'
+    //Button 라이브러리
+    implementation 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
+    implementation 'com.ornach.nobobutton:nobobutton:1.6'
+    //EditText 라이브러리
+    implementation 'com.rengwuxian.materialedittext:library:2.1.4'
+    //Chart 라이브러리
+    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

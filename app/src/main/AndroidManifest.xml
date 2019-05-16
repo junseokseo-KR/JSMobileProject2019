@@ -23,6 +23,6 @@
         <activity android:name=".WelecomActivity"></activity>
         <activity android:name=".SpecRegistActivity"></activity>
         <activity android:name=".MySpecActivity"></activity>
+        <activity android:name=".SpecCompareBarChartActivity"/>
     </application>
-
 </manifest>

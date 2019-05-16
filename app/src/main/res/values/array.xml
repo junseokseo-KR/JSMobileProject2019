@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="opic">
+        <item>없음</item>
+        <item>NL</item>
+        <item>NM</item>
+        <item>NH</item>
+        <item>IL</item>
+        <item>IM</item>
+        <item>IH</item>
+        <item>AL</item>
+    </string-array>
+
+    <string-array name="toeicSpeaking">
+        <item>없음</item>
+        <item>L1</item>
+        <item>L2</item>
+        <item>L3</item>
+        <item>L4</item>
+        <item>L5</item>
+        <item>L6</item>
+        <item>L7</item>
+        <item>L8</item>
+    </string-array>
+
+    <string-array name="connecting_colors">
+        <item>#0000FF</item>
+    </string-array>
+
+    <string-array name="tick_colors">
+        <item>#070772</item>
+    </string-array>
+</resources>
