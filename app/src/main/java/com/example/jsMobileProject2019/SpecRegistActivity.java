@@ -1,11 +1,15 @@
 package com.example.jsMobileProject2019;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -17,14 +21,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class SpecRegistActivity extends AppCompatActivity {
-    MaterialEditText editGrade,editToeic,editName,editSchool,editLisence,editOversea,editAward,editIntern,editMajor;    //9
-    Spinner editToeicSpeaking, editOPIc;    //2
-    String name,email,college,major, opic, toeicSpeaking; //6
+    MaterialEditText editGrade,editToeic,editName,editSchool,editLisence,editOversea,editAward,editIntern;    //9
+    Spinner editToeicSpeaking, editOPIc,editMajor,editField;    //2
+    String name,email,college,major, opic, toeicSpeaking,field; //6
     long award, license,intern, overseas,toeic;   //5
     double grade;   //1
     FirebaseFirestore db;
     Intent intent;
     UserData user;
+    ArrayAdapter<CharSequence> adapter1, adapter2;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,6 +38,8 @@ public class SpecRegistActivity extends AppCompatActivity {
         intent = getIntent();
         db = FirebaseFirestore.getInstance();
         email = intent.getExtras().getString("email");
+
+        final String[] items = {"하나","둘"};
 
         editGrade = findViewById(R.id.editGrade);
         editToeic = findViewById(R.id.editToeic);
@@ -45,8 +52,40 @@ public class SpecRegistActivity extends AppCompatActivity {
         editOPIc = findViewById(R.id.editOpic);
         editOversea = findViewById(R.id.editOversea);
         editMajor = findViewById(R.id.editMajor);
+        editField = findViewById(R.id.editField);
+        adapter1 = ArrayAdapter.createFromResource(this, R.array.select_major, android.R.layout.simple_spinner_dropdown_item);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        editMajor.setAdapter(adapter1);
+        editMajor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(adapter1.getItem(position).equals("-")){
+                    adapter2 = ArrayAdapter.createFromResource(SpecRegistActivity.this, R.array.no_major, android.R.layout.simple_spinner_dropdown_item);
+                }
+                else if(adapter1.getItem(position).equals("공학")){
+                    adapter2 = ArrayAdapter.createFromResource(SpecRegistActivity.this, R.array.select_engineering, android.R.layout.simple_spinner_dropdown_item);
+                }
+                makeField(adapter2,editField,position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.w("warning","선택값이 없습니다.");
+            }
+        });
     }
 
+    protected  void makeField(ArrayAdapter adap, Spinner editfield,int i){
+        adap.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        if (i==0){
+            editfield.setEnabled(false);
+        }
+        else{
+            editfield.setEnabled(true);
+        }
+
+        editfield.setAdapter(adap);
+    }
     public void createDoc(View view){
         DocumentReference doc = db.collection("userData").document(email);
         grade = Float.parseFloat(editGrade.getText().toString());
@@ -57,7 +96,7 @@ public class SpecRegistActivity extends AppCompatActivity {
         overseas = Integer.parseInt(editToeic.getText().toString());
         name = editName.getText().toString();
         college = editSchool.getText().toString();
-        major = editMajor.getText().toString();
+        major = editField.getSelectedItem().toString();
         opic = editOPIc.getSelectedItem().toString();
         toeicSpeaking = editToeicSpeaking.getSelectedItem().toString();
 

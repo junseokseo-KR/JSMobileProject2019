@@ -23,6 +23,32 @@
         <item>L8</item>
     </string-array>
 
+    <string-array name="major">
+        <item>모든 계열</item>
+        <item>공학</item>
+    </string-array>
+
+    <string-array name="engineering_field">
+        <item>공학 계열</item>
+        <item>컴퓨터/시스템 공학</item>
+        <item>금속/비금속 공학</item>
+    </string-array>
+
+    <string-array name="select_major">
+        <item>-</item>
+        <item>공학</item>
+    </string-array>
+
+    <string-array name="no_major">
+        <item>-</item>
+    </string-array>
+
+    <string-array name="select_engineering">
+        <item>공학 계열</item>
+        <item>컴퓨터/시스템 공학</item>
+        <item>금속/비금속 공학</item>
+    </string-array>
+
     <string-array name="connecting_colors">
         <item>#0000FF</item>
     </string-array>
@@ -30,4 +56,5 @@
     <string-array name="tick_colors">
         <item>#070772</item>
     </string-array>
+
 </resources>

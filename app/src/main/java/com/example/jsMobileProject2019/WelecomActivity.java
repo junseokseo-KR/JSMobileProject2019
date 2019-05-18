@@ -39,8 +39,13 @@ public class WelecomActivity extends AppCompatActivity {
     }
     //비교바차트 액티비티 이동
     public void moveBarChart(View v){
-        intent = new Intent(WelecomActivity.this, SpecCompareBarChartActivity.class);
+        intent = new Intent(WelecomActivity.this, SelectCorpActivity.class);
         intent.putExtra("user", user);
+        startActivity(intent);
+    }
+    public void moveTest(View v){
+        intent = new Intent(WelecomActivity.this, TestActivity.class);
+//        intent.putExtra("user", user);
         startActivity(intent);
     }
 

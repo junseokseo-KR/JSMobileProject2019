@@ -5,12 +5,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.chart.common.listener.Event;
+import com.anychart.chart.common.listener.ListenersInterface;
 import com.anychart.charts.Radar;
 import com.anychart.core.radar.series.Line;
 import com.anychart.data.Mapping;
@@ -20,9 +25,13 @@ import com.anychart.enums.MarkerType;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +40,8 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
     FirebaseFirestore db;
     DocumentReference dr;
     DocumentSnapshot ds;
+    CollectionReference citiesRef;
+    Query query;
     Intent intent;
     String email,college,major,opic,corp,depart,toeicS;
     long award, license,intern,oversea,toeic,volun;
@@ -39,42 +50,53 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
     Radar radar;
     AnyChartView anyChartView;
     UserData user;
+    Button btn;
+    double gradeMax;
+    long internMax, licenseMax, awardMax, toeicMax;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.spec_compare_bar_chart);
 
+        gradeMax=0;
+        toeicMax=0;
+        internMax=0;
+        licenseMax=0;
+        awardMax=0;
 
         anyChartView = findViewById(R.id.any_chart_view);
         anyChartView.setProgressBar(findViewById(R.id.progress_bar));
         radar = AnyChart.radar();
         intent = getIntent();
         user = (UserData) intent.getSerializableExtra("user");
-
         db = FirebaseFirestore.getInstance();
-        dr = db.collection("specData").document("user"+921+"_"+2);
-        dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        citiesRef = db.collection("specData");
+        query = citiesRef.whereEqualTo("corporation", intent.getExtras().getString("corp")).whereEqualTo("department", intent.getExtras().getString("depart"));;
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                ds = task.getResult();
-                if (ds.exists()) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), "데이터 불러오기 성공", Toast.LENGTH_LONG).show();
-                    college = ds.getString("college");
-                    major = ds.getString("class");
-                    opic = ds.getString("opic");
-                    corp = ds.getString("corporation");
-                    depart = ds.getString("department");
-                    toeicS = ds.getString("toeic speaking");
-                    toeic = (long) ds.get("toeic");
-                    intern = (long) ds.get("intern");
-                    oversea = (long) ds.get("overseas experience");
-                    volun = (long) ds.get("volunteer activity");
-                    award = (long) ds.get("award");
-                    license = (long) ds.get("license");
-                    grade = (double) ds.get("grade");
+                    for (QueryDocumentSnapshot qds : task.getResult()) {
+                        grade = (double)qds.get("grade");
+                        if (gradeMax<grade)
+                            gradeMax = grade;
+                        toeicMax = setLongMax(toeicMax,toeic,"toeic",qds);
+                        internMax = setLongMax(internMax,intern,"intern",qds);
+                        awardMax = setLongMax(awardMax,award,"award",qds);
+                        licenseMax = setLongMax(licenseMax,license,"license",qds);
 
-                    radar.title("테스트 차트");
+                        award = (long)qds.get("award");
+                        if (awardMax<award)
+                            awardMax = award;
+                        license = (long)qds.get("license");
+                        if (licenseMax<license)
+                            licenseMax = license;
+                        //함수의 매개변수(도출값, 비교값, 필드명, qds); ex) method(valueMAX, value, "fieldName", qds);
+                        Log.i("user",qds.getId());
+                    }
+                    radar.title(corp+" / "+depart);
 
                     radar.yScale().minimum(0d);
                     radar.yScale().minimumGap(0d);
@@ -87,46 +109,110 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
                             .enabled(true);
 
                     List<DataEntry> data = new ArrayList<>();
-                    data.add(new CustomDataEntry("학점", 3.4, grade));
-                    data.add(new CustomDataEntry("토익", 0, (toeic/100)));
-                    data.add(new CustomDataEntry("자격증", 0, license));
-                    data.add(new CustomDataEntry("인턴경험", 1, intern));
-                    data.add(new CustomDataEntry("수상경험", 1, award));
+                    data.add(new CustomDataEntry("학점", user.getGrade(), gradeMax));
+                    data.add(new CustomDataEntry("토익", (user.getToeic()/100), (toeicMax/100)));
+                    data.add(new CustomDataEntry("자격증", user.getLicense(), licenseMax));
+                    data.add(new CustomDataEntry("인턴경험", user.getIntern(), internMax));
+                    data.add(new CustomDataEntry("수상경험", user.getAward(), awardMax));
 
                     Set set = Set.instantiate();
                     set.data(data);
                     Mapping userData = set.mapAs("{ x: 'x', value: 'value' }");
                     Mapping saraminData = set.mapAs("{ x: 'x', value: 'value2' }");
 
-                    Line shamanLine = radar.line(userData);
-                    shamanLine.name("사용자");
-                    shamanLine.markers()
+                    Line userLine = radar.line(userData);
+                    userLine.name(user.getName());
+                    userLine.markers()
                             .enabled(true)
                             .type(MarkerType.CIRCLE)
                             .size(3d);
 
-                    Line warriorLine = radar.line(saraminData);
-                    warriorLine.name("사람인");
-                    warriorLine.markers()
+                    Line maxLine = radar.line(saraminData);
+                    maxLine.name("최고");
+                    maxLine.markers()
                             .enabled(true)
-                            .type(MarkerType.CIRCLE)
+                            .type(MarkerType.DIAMOND)
                             .size(3d);
 
                     radar.tooltip().format("Value: {%Value}");
 
                     anyChartView.setChart(radar);
-                    System.out.println("da"+saraminArr);
-                } else {
-                    System.out.println("No Data");
-                    Toast.makeText(getApplicationContext(), "데이터 불러오기 실패", Toast.LENGTH_LONG).show();
                 }
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "데이터 불러오기 실패", Toast.LENGTH_LONG).show();
-            }
         });
+//        dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                ds = task.getResult();
+//                if (ds.exists()) {
+//                    Toast.makeText(getApplicationContext(), "데이터 불러오기 성공", Toast.LENGTH_LONG).show();
+//                    college = ds.getString("college");
+//                    major = ds.getString("major");
+//                    opic = ds.getString("opic");
+//                    corp = ds.getString("corporation");
+//                    depart = ds.getString("department");
+//                    toeicS = ds.getString("toeicSpeaking");
+//                    toeic = (long) ds.get("toeic");
+//                    intern = (long) ds.get("intern");
+//                    oversea = (long) ds.get("overseas");
+//                    volun = (long) ds.get("volunteer activity");
+//                    award = (long) ds.get("award");
+//                    license = (long) ds.get("license");
+//                    grade = (double) ds.get("grade");
+//
+//                    radar.title(corp+" / "+depart);
+//
+//                    radar.yScale().minimum(0d);
+//                    radar.yScale().minimumGap(0d);
+//                    radar.yScale().ticks().interval(2d);
+//
+//                    radar.xAxis().labels().padding(5d, 5d, 5d, 5d);
+//
+//                    radar.legend()
+//                            .align(Align.CENTER)
+//                            .enabled(true);
+//
+//                    List<DataEntry> data = new ArrayList<>();
+//                    data.add(new CustomDataEntry("학점", user.getGrade(), grade));
+//                    data.add(new CustomDataEntry("토익", (user.getToeic()/100), (toeic/100)));
+//                    data.add(new CustomDataEntry("자격증", user.getLicense(), license));
+//                    data.add(new CustomDataEntry("인턴경험", user.getIntern(), intern));
+//                    data.add(new CustomDataEntry("수상경험", user.getAward(), award));
+//
+//                    Set set = Set.instantiate();
+//                    set.data(data);
+//                    Mapping userData = set.mapAs("{ x: 'x', value: 'value' }");
+//                    Mapping saraminData = set.mapAs("{ x: 'x', value: 'value2' }");
+//
+//                    Line userLine = radar.line(userData);
+//                    userLine.name(user.getName());
+//                    userLine.markers()
+//                            .enabled(true)
+//                            .type(MarkerType.CIRCLE)
+//                            .size(3d);
+//
+//                    Line maxLine = radar.line(saraminData);
+//                    maxLine.name("최고");
+//                    maxLine.markers()
+//                            .enabled(true)
+//                            .type(MarkerType.DIAMOND)
+//                            .size(3d);
+//
+//                    radar.tooltip().format("Value: {%Value}");
+//
+//                    anyChartView.setChart(radar);
+//                    System.out.println("da"+saraminArr);
+//                } else {
+//                    System.out.println("No Data");
+//                    Toast.makeText(getApplicationContext(), "데이터 불러오기 실패", Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(getApplicationContext(), "데이터 불러오기 실패", Toast.LENGTH_LONG).show();
+//            }
+//        });
     }
 
     private class CustomDataEntry extends ValueDataEntry {
@@ -136,4 +222,10 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
         }
     }
 
+    protected long setLongMax(long valueMax, long value, String fieldName, QueryDocumentSnapshot qds){
+        value = (long)qds.get(fieldName);
+        if (valueMax<value)
+            valueMax = value;
+        return valueMax;
+    }
 }
