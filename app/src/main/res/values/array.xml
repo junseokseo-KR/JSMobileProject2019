@@ -57,4 +57,23 @@
         <item>#070772</item>
     </string-array>
 
+    <string-array name="corp_name">
+        <item>삼성전자㈜</item>
+        <item>NAVER</item>
+    </string-array>
+
+    <string-array name="naver_depart">
+        <item>-</item>
+        <item>서버관리</item>
+        <item>정보통신·IT</item>
+    </string-array>
+
+    <string-array name="samsung_depart">
+        <item>-</item>
+        <item>연구·실험·기술</item>
+        <item>정보통신·IT</item>
+        <item>SW(소프트웨어)</item>
+        <item>무선통신</item>
+        <item>기술직</item>
+    </string-array>
 </resources>

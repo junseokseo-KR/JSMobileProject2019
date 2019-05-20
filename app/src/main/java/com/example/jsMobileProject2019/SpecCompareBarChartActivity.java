@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -14,8 +13,6 @@ import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
-import com.anychart.chart.common.listener.Event;
-import com.anychart.chart.common.listener.ListenersInterface;
 import com.anychart.charts.Radar;
 import com.anychart.core.radar.series.Line;
 import com.anychart.data.Mapping;
@@ -23,7 +20,6 @@ import com.anychart.data.Set;
 import com.anychart.enums.Align;
 import com.anychart.enums.MarkerType;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -40,7 +36,7 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
     FirebaseFirestore db;
     DocumentReference dr;
     DocumentSnapshot ds;
-    CollectionReference citiesRef;
+    CollectionReference dataRef;
     Query query;
     Intent intent;
     String email,college,major,opic,corp,depart,toeicS;
@@ -68,17 +64,24 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
         anyChartView = findViewById(R.id.any_chart_view);
         anyChartView.setProgressBar(findViewById(R.id.progress_bar));
         radar = AnyChart.radar();
+
         intent = getIntent();
         user = (UserData) intent.getSerializableExtra("user");
+        corp = intent.getExtras().getString("corpName");
+        depart = intent.getExtras().getString("departName");
+
         db = FirebaseFirestore.getInstance();
-        citiesRef = db.collection("specData");
-        query = citiesRef.whereEqualTo("corporation", intent.getExtras().getString("corp")).whereEqualTo("department", intent.getExtras().getString("depart"));;
+        dataRef = db.collection("specData");
+//        query = dataRef.whereEqualTo("corporation", corp).whereEqualTo("department", depart);
+        query = dataRef.whereEqualTo("corporation", "DB lnc.").whereEqualTo("department", "네트워크관라");
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), "데이터 불러오기 성공", Toast.LENGTH_LONG).show();
                     for (QueryDocumentSnapshot qds : task.getResult()) {
+                        Log.i("사용자",qds.getId());
+                        gradeMax = setDoubleMax(gradeMax,grade,"grade",qds);
                         grade = (double)qds.get("grade");
                         if (gradeMax<grade)
                             gradeMax = grade;
@@ -86,16 +89,8 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
                         internMax = setLongMax(internMax,intern,"intern",qds);
                         awardMax = setLongMax(awardMax,award,"award",qds);
                         licenseMax = setLongMax(licenseMax,license,"license",qds);
-
-                        award = (long)qds.get("award");
-                        if (awardMax<award)
-                            awardMax = award;
-                        license = (long)qds.get("license");
-                        if (licenseMax<license)
-                            licenseMax = license;
-                        //함수의 매개변수(도출값, 비교값, 필드명, qds); ex) method(valueMAX, value, "fieldName", qds);
-                        Log.i("user",qds.getId());
                     }
+
                     radar.title(corp+" / "+depart);
 
                     radar.yScale().minimum(0d);
@@ -224,6 +219,13 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
 
     protected long setLongMax(long valueMax, long value, String fieldName, QueryDocumentSnapshot qds){
         value = (long)qds.get(fieldName);
+        if (valueMax<value)
+            valueMax = value;
+        return valueMax;
+    }
+
+    protected double setDoubleMax(double valueMax, double value, String fieldName, QueryDocumentSnapshot qds){
+        value = (double)qds.get(fieldName);
         if (valueMax<value)
             valueMax = value;
         return valueMax;

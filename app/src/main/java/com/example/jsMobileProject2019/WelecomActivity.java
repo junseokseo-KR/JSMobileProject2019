@@ -45,7 +45,7 @@ public class WelecomActivity extends AppCompatActivity {
     }
     public void moveTest(View v){
         intent = new Intent(WelecomActivity.this, TestActivity.class);
-//        intent.putExtra("user", user);
+        intent.putExtra("user", user);
         startActivity(intent);
     }
 

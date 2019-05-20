@@ -1,15 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-    <Button
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+        <EditText
+            android:layout_marginTop="30dp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:hint="기업명"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+    <!--<ListView-->
+        <!--android:layout_width="300dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginTop="100dp"-->
+        <!--android:id="@+id/corpSpinner"-->
+        <!--app:smsp_hint="기업명"-->
+        <!--app:smsp_hintTextSize="20sp"-->
+        <!--app:smsp_showEmptyDropdown="true"-->
+        <!--android:entries="@array/corp_name"/>-->
+    <com.chivorn.smartmaterialspinner.SmartMaterialSpinner
         android:layout_width="300dp"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="100dp"
-        android:text="SK텔레콤㈜"
-        android:textSize="30sp"
-        android:id="@+id/corpBtn"/>
+        android:id="@+id/departSpinner"
+        app:smsp_hint="부서명"
+        app:smsp_hintTextSize="20sp"
+        app:smsp_showEmptyDropdown="true"/>
 </LinearLayout>
 

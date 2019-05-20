@@ -27,7 +27,6 @@
             app:met_floatingLabelText="이메일 계정"
             app:met_floatingLabelAnimating="true"
             app:met_singleLineEllipsis="true"
-            android:text="wnstjr7395@naver.com"
             />
         <com.rengwuxian.materialedittext.MaterialEditText
             android:layout_width="match_parent"
@@ -41,7 +40,6 @@
             app:met_floatingLabelAnimating="true"
             android:layout_marginBottom="30dp"
             app:met_singleLineEllipsis="true"
-            android:text="wnstjr7570"
             />
         <com.dd.processbutton.iml.ActionProcessButton
             android:layout_width="match_parent"

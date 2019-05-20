@@ -39,8 +39,6 @@ public class SpecRegistActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         email = intent.getExtras().getString("email");
 
-        final String[] items = {"하나","둘"};
-
         editGrade = findViewById(R.id.editGrade);
         editToeic = findViewById(R.id.editToeic);
         editToeicSpeaking = findViewById(R.id.editToeicS);

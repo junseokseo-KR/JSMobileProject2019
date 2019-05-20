@@ -25,7 +25,7 @@
         <activity android:name=".MySpecActivity"></activity>
         <activity android:name=".SelectCorpActivity"/>
         <activity android:name=".SelectDepartActivity"/>
-        <activity android:name=".SpecCompareBarChartActivity"/>\
+        <activity android:name=".SpecCompareBarChartActivity"/>
 
         <activity android:name=".TestActivity"/>
     </application>

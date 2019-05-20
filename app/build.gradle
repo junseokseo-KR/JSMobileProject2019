@@ -36,6 +36,9 @@ dependencies {
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
     //Chart 라이브러리
     implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
+    //Spinner 라이브러리
+    implementation 'com.github.chivorns:smartmaterialspinner:1.0.4'
+
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
