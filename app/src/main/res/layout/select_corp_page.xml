@@ -2,37 +2,39 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center">
-        <EditText
-            android:layout_marginTop="30dp"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:hint="기업명"
-            android:layout_gravity="center"/>
-    </LinearLayout>
-    <!--<ListView-->
-        <!--android:layout_width="300dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:layout_marginTop="100dp"-->
-        <!--android:id="@+id/corpSpinner"-->
-        <!--app:smsp_hint="기업명"-->
-        <!--app:smsp_hintTextSize="20sp"-->
-        <!--app:smsp_showEmptyDropdown="true"-->
-        <!--android:entries="@array/corp_name"/>-->
-    <com.chivorn.smartmaterialspinner.SmartMaterialSpinner
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="100dp"
-        android:id="@+id/departSpinner"
-        app:smsp_hint="부서명"
-        app:smsp_hintTextSize="20sp"
-        app:smsp_showEmptyDropdown="true"/>
-</LinearLayout>
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/editSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="원하는 회사를 검색하세요."/>
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:divider="#999999"
+            android:dividerHeight="1dp">
+        </ListView>
+
+        <com.chivorn.smartmaterialspinner.SmartMaterialSpinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/departTest"
+            app:smsp_hintTextSize="20sp"
+            app:smsp_showEmptyDropdown="true"
+            app:smsp_enableFloatingLabel="true"
+            app:smsp_floatingLabelText="부서명"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="버튼"
+            android:id="@+id/submitBtn"
+            android:onClick="submitCorpDepart"/>
+    </LinearLayout>
+</LinearLayout>

@@ -1,13 +1,15 @@
 package com.example.jsMobileProject2019;
 
+import android.util.Log;
+
 import java.io.Serializable;
 
 public class UserData implements Serializable {
     private String email,name,college,major, opic, toeicSpeaking;
-    private long award, license,intern, overseas,toeic;
+    private long award, license,intern, overseas,toeic, volun;
     private double grade;
     
-    public UserData(String email, String name, String college, String major, String opic, String toeicSpeaking, double grade, long toeic, long award, long license, long intern, long overseas){
+    public UserData(String email, String name, String college, String major, String opic, String toeicSpeaking, double grade, long toeic, long award, long license, long intern, long overseas, long volun){
         this.email = email;
         this.name = name;
         this.college = college;
@@ -20,6 +22,9 @@ public class UserData implements Serializable {
         this.license = license;
         this.intern = intern;
         this.overseas = overseas;
+        this.volun = volun;
+
+        Log.i("사용자 등록", intern+" : "+volun+" : "+award+" : "+license);
     }
 
     public String getName() {
@@ -69,4 +74,6 @@ public class UserData implements Serializable {
     public long getOverseas() {
         return overseas;
     }
+
+    public long getVolun() { return volun;  }
 }

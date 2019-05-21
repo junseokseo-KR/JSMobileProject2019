@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -41,14 +42,9 @@ public class WelecomActivity extends AppCompatActivity {
     public void moveBarChart(View v){
         intent = new Intent(WelecomActivity.this, SelectCorpActivity.class);
         intent.putExtra("user", user);
+        Log.i("인텐드", intent.toString());
         startActivity(intent);
     }
-    public void moveTest(View v){
-        intent = new Intent(WelecomActivity.this, TestActivity.class);
-        intent.putExtra("user", user);
-        startActivity(intent);
-    }
-
     public void logOut(View view){
         FirebaseAuth.getInstance().signOut();
         intent = new Intent(WelecomActivity.this, MainActivity.class);

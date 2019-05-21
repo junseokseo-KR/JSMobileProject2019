@@ -1,24 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
-
-    <com.anychart.AnyChartView
-        android:id="@+id/any_chart_view"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:layout_marginTop="10dp"
+        android:id="@+id/corpTextView"
+        android:backgroundTint="@color/white"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:textAlignment="center"
+        android:layout_marginTop="5dp"
+        android:id="@+id/departTextView"
+        android:backgroundTint="@color/white"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:textAlignment="center"
+        android:layout_marginTop="5dp"
+        android:id="@+id/userCntTextView"
+        android:backgroundTint="@color/white"/>
+    <com.github.mikephil.charting.charts.RadarChart
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:id="@+id/radarChart"/>
+    <com.dd.processbutton.iml.ActionProcessButton
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="위젯 등록"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:pb_colorComplete="@color/green_complete"
+        app:pb_colorError="@color/red_error"
+        app:pb_colorNormal="@color/colorPrimary"
+        app:pb_colorPressed="@color/colorPrimaryDark"
+        app:pb_colorProgress="@color/purple_progress"
+        app:pb_textComplete="등록 성공"
+        app:pb_textError="등록 실패"
+        app:pb_textProgress="위젯 등록중..."
+        android:id="@+id/submitWidget"
+        android:onClick="setWidget"
         />
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

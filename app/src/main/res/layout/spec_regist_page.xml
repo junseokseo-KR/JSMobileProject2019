@@ -184,7 +184,7 @@
                 android:id="@+id/editOversea"
                 android:inputType="number"
                 app:met_floatingLabel="highlight"
-                app:met_floatingLabelText="해외봉사 경험"
+                app:met_floatingLabelText="해외 경험"
                 app:met_floatingLabelAnimating="true"
                 app:met_floatingLabelAlwaysShown="true"/>
     </LinearLayout>
@@ -204,6 +204,22 @@
                 app:met_floatingLabelAlwaysShown="true"
                 />
     </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:id="@+id/editVolunteer"
+                android:inputType="number"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="봉사 활동"
+                app:met_floatingLabelAnimating="true"
+                app:met_floatingLabelAlwaysShown="true"
+                />
+        </LinearLayout>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

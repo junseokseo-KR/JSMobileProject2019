@@ -21,10 +21,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class SpecRegistActivity extends AppCompatActivity {
-    MaterialEditText editGrade,editToeic,editName,editSchool,editLisence,editOversea,editAward,editIntern;    //9
+    MaterialEditText editGrade,editToeic,editName,editSchool,editLisence,editOversea,editAward,editIntern,editVolunteer;    //9
     Spinner editToeicSpeaking, editOPIc,editMajor,editField;    //2
     String name,email,college,major, opic, toeicSpeaking,field; //6
-    long award, license,intern, overseas,toeic;   //5
+    long award, license,intern, overseas,toeic,volun;   //5
     double grade;   //1
     FirebaseFirestore db;
     Intent intent;
@@ -39,6 +39,7 @@ public class SpecRegistActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         email = intent.getExtras().getString("email");
 
+        editVolunteer = findViewById(R.id.editVolunteer);
         editGrade = findViewById(R.id.editGrade);
         editToeic = findViewById(R.id.editToeic);
         editToeicSpeaking = findViewById(R.id.editToeicS);
@@ -88,10 +89,11 @@ public class SpecRegistActivity extends AppCompatActivity {
         DocumentReference doc = db.collection("userData").document(email);
         grade = Float.parseFloat(editGrade.getText().toString());
         toeic = Integer.parseInt(editToeic.getText().toString());
-        award = Integer.parseInt(editToeic.getText().toString());
-        license = Integer.parseInt(editToeic.getText().toString());
-        intern = Integer.parseInt(editToeic.getText().toString());
-        overseas = Integer.parseInt(editToeic.getText().toString());
+        award = Integer.parseInt(editAward.getText().toString());
+        license = Integer.parseInt(editLisence.getText().toString());
+        intern = Integer.parseInt(editIntern.getText().toString());
+        overseas = Integer.parseInt(editOversea.getText().toString());
+        volun = Integer.parseInt(editVolunteer.getText().toString());
         name = editName.getText().toString();
         college = editSchool.getText().toString();
         major = editField.getSelectedItem().toString();
@@ -99,7 +101,8 @@ public class SpecRegistActivity extends AppCompatActivity {
         toeicSpeaking = editToeicSpeaking.getSelectedItem().toString();
 
         //String email, String name, String college, String major, String opic, String toeicSpeaking, double grade, long toeic, long award, long license, long intern, long overseas
-        user = new UserData(email, name, college, major, opic, toeicSpeaking, grade, toeic, award, license, intern, overseas);
+        user = new UserData(email, name, college, major, opic, toeicSpeaking, grade, toeic, award, license, intern, overseas, volun);
+
         doc.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

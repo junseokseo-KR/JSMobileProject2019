@@ -9,24 +9,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver android:name=".ChartWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/chart_widget_info" />
+        </receiver>
+
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/SplashTheme"
             android:screenOrientation="portrait"
-            >
+            android:theme="@style/SplashTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".WelecomActivity"></activity>
-        <activity android:name=".SpecRegistActivity"></activity>
-        <activity android:name=".MySpecActivity"></activity>
-        <activity android:name=".SelectCorpActivity"/>
-        <activity android:name=".SelectDepartActivity"/>
-        <activity android:name=".SpecCompareBarChartActivity"/>
-
-        <activity android:name=".TestActivity"/>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".WelecomActivity" />
+        <activity android:name=".SpecRegistActivity" />
+        <activity android:name=".MySpecActivity" />
+        <activity android:name=".SelectCorpActivity" />
+        <activity android:name=".SpecCompareBarChartActivity" />
     </application>
+
 </manifest>

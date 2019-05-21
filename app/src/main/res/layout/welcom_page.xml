@@ -36,7 +36,7 @@
             android:text="스펙 비교"
             android:textSize="20dp"
             android:id="@+id/compareBtn"
-            android:onClick="moveTest"
+            android:onClick="moveBarChart"
             app:nb_text="스펙 비교"
             android:layout_marginBottom="20dp"
             app:nb_borderWidth="2dp"
