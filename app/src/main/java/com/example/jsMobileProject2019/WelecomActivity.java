@@ -49,5 +49,6 @@ public class WelecomActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signOut();
         intent = new Intent(WelecomActivity.this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     private void requestLogin(final String email, final String password){
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
+            public void onComplete(@NonNull final Task<AuthResult> task) {
                 System.out.println(email+" : "+password);
                 //로그인 성공
                 if(task.isSuccessful()){
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                                 System.out.println(ds.getString("name"));
                                 user = new UserData(ds.getString("email"), ds.getString("name"),ds.getString("college"),ds.getString("major"),ds.getString("opic"),ds.getString("toeicSpeaking"), (double) ds.get("grade"), (long) ds.get("toeic"), (long) ds.get("award"), (long) ds.get("license"), (long) ds.get("intern"),(long) ds.get("overseas"), (long) ds.get("volun"));
                                 System.out.print(user);
-                                intent = new Intent(MainActivity.this, WelecomActivity.class);
+                                intent = new Intent( MainActivity.this, WelecomActivity.class);
                                 intent.putExtra("user", user);
                                 startActivity(intent);
                             } else {
@@ -138,6 +139,10 @@ public class MainActivity extends AppCompatActivity {
                     //로그인 실패
                     logBtnState=-1;
                     logBtn.setProgress(logBtnState);
+                    Log.w("에러",task.getException().getMessage());
+                    if (task.getException().getMessage().equals("The email address is badly formatted.")){
+                        Toast.makeText(getApplicationContext(), "이메일 주소의 형식이 잘못되었습니다.", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });

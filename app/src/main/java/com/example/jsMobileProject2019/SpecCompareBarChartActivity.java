@@ -42,10 +42,10 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
     int userCnt;
     UserData user;
     private RadarChart rchart;
-    private ArrayList<RadarEntry> userEntry, maxEntry, minEntry, avgEntry;
+    private ArrayList<RadarEntry> userEntry, maxEntry, minEntry, avgEntry, saraminEntry;
     private ArrayList<Double> gradeArr;
     private ArrayList<Long> internArr, licenseArr, awardArr, overseaArr,volunArr;
-    RadarDataSet userSet, maxSet, minSet, avgSet;
+    RadarDataSet userSet, maxSet, minSet, avgSet, saraminSet;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,6 +111,7 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
 
     private void setData() {
         userEntry = new ArrayList<>();
+        saraminEntry = new ArrayList<>();
         maxEntry = new ArrayList<>();
         minEntry = new ArrayList<>();
         avgEntry = new ArrayList<>();
@@ -132,6 +133,7 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), "데이터 불러오기 성공", Toast.LENGTH_LONG).show();
+                    ArrayList<IRadarDataSet> sets = new ArrayList<>();
                     for (QueryDocumentSnapshot qds : task.getResult()) {
                         gradeArr.add((double) qds.get("grade"));
                         volunArr.add((long) qds.get("volun"));
@@ -141,93 +143,56 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
                         licenseArr.add((long) qds.get("license"));
                         userCnt++;
                     }
-                    userEntry.add(new RadarEntry((float) user.getGrade()));
-                    userEntry.add(new RadarEntry((float) user.getVolun()));
-                    userEntry.add(new RadarEntry((float) user.getOverseas()));
-                    userEntry.add(new RadarEntry((float) user.getLicense()));
-                    userEntry.add(new RadarEntry((float) user.getIntern()));
-                    userEntry.add(new RadarEntry((float) user.getAward()));
+                    if (userCnt==1){
+                        userChart();
 
-                    maxEntry.add(new RadarEntry((float) (double)Collections.max(gradeArr)));
-                    maxEntry.add(new RadarEntry((float) (long)Collections.max(volunArr)));
-                    maxEntry.add(new RadarEntry((float) (long)Collections.max(overseaArr)));
-                    maxEntry.add(new RadarEntry((float) (long)Collections.max(licenseArr)));
-                    maxEntry.add(new RadarEntry((float) (long)Collections.max(internArr)));
-                    maxEntry.add(new RadarEntry((float) (long)Collections.max(awardArr)));
+                        saraminSet = new RadarDataSet(setEntry(saraminEntry,gradeArr.get(0),volunArr.get(0),overseaArr.get(0),licenseArr.get(0),internArr.get(0),awardArr.get(0)), "사람인");
+                        setChartAttribute(saraminSet,Color.rgb(121, 162, 175));
 
-                    minEntry.add(new RadarEntry((float) (double)Collections.min(gradeArr)));
-                    minEntry.add(new RadarEntry((float) (long)Collections.min(volunArr)));
-                    minEntry.add(new RadarEntry((float) (long)Collections.min(overseaArr)));
-                    minEntry.add(new RadarEntry((float) (long)Collections.min(licenseArr)));
-                    minEntry.add(new RadarEntry((float) (long)Collections.min(internArr)));
-                    minEntry.add(new RadarEntry((float) (long)Collections.min(awardArr)));
+                        sets.add(userSet);
+                        sets.add(saraminSet);
+                    }else {
+                        userChart();
 
-                    avgEntry.add(new RadarEntry((float) setDoubleAvg(gradeArr)));
-                    avgEntry.add(new RadarEntry((float) setLongAvg(volunArr)));
-                    avgEntry.add(new RadarEntry((float) setLongAvg(overseaArr)));
-                    avgEntry.add(new RadarEntry((float) setLongAvg(licenseArr)));
-                    avgEntry.add(new RadarEntry((float) setLongAvg(internArr)));
-                    avgEntry.add(new RadarEntry((float) setLongAvg(awardArr)));
+                        maxSet = new RadarDataSet(setEntry(maxEntry,Collections.max(gradeArr),Collections.max(volunArr),Collections.max(overseaArr),Collections.max(licenseArr),Collections.max(internArr),Collections.max(awardArr)), "최고");
+                        setChartAttribute(maxSet,Color.rgb(121, 162, 175));
 
-                    Log.i("평균", Double.toString(setDoubleAvg(gradeArr))+" : "+Double.toString(setLongAvg(volunArr))+" : "+Double.toString(setLongAvg(overseaArr))+" : "+Double.toString(setLongAvg(licenseArr))+" : "+Double.toString(setLongAvg(internArr))+" : "+Double.toString(setLongAvg(awardArr)));
+                        minSet = new RadarDataSet(setEntry(minEntry,Collections.min(gradeArr),Collections.min(volunArr),Collections.min(overseaArr),Collections.min(licenseArr),Collections.min(internArr),Collections.min(awardArr)), "최저");
+                        setChartAttribute(minSet,Color.MAGENTA);
 
-                    Log.w("max", maxEntry.toString());
-                    Log.w("min", minEntry.toString());
+                        avgSet = new RadarDataSet(setEntry(avgEntry,setDoubleAvg(gradeArr),(long)setLongAvg(volunArr),(long)setLongAvg(overseaArr),(long)setLongAvg(licenseArr),(long)setLongAvg(internArr),(long)setLongAvg(awardArr)), "평균");
+                        setChartAttribute(avgSet,Color.YELLOW);
 
-                    userSet = new RadarDataSet(userEntry, "사용자");
-                    userSet.setColor(Color.RED);
-                    userSet.setFillColor(Color.RED);
-                    userSet.setDrawFilled(true);
-                    userSet.setFillAlpha(180);
-                    userSet.setLineWidth(2f);
-                    userSet.setDrawHighlightCircleEnabled(true);
-                    userSet.setDrawHorizontalHighlightIndicator(false);
-
-                    maxSet = new RadarDataSet(maxEntry, "최고");
-                    maxSet.setColor(Color.rgb(121, 162, 175));
-                    maxSet.setFillColor(Color.rgb(121, 162, 175));
-                    maxSet.setDrawFilled(true);
-                    maxSet.setFillAlpha(180);
-                    maxSet.setLineWidth(2f);
-                    maxSet.setDrawHighlightCircleEnabled(true);
-                    maxSet.setDrawHorizontalHighlightIndicator(false);
-
-                    minSet = new RadarDataSet(minEntry, "최저");
-                    minSet.setColor(Color.MAGENTA);
-                    minSet.setFillColor(Color.MAGENTA);
-                    minSet.setDrawFilled(true);
-                    minSet.setFillAlpha(180);
-                    minSet.setLineWidth(2f);
-                    minSet.setDrawHighlightCircleEnabled(true);
-                    minSet.setDrawHorizontalHighlightIndicator(false);
-
-                    avgSet = new RadarDataSet(minEntry, "평균");
-                    avgSet.setColor(Color.YELLOW);
-                    avgSet.setFillColor(Color.YELLOW);
-                    avgSet.setDrawFilled(true);
-                    avgSet.setFillAlpha(180);
-                    avgSet.setLineWidth(2f);
-                    avgSet.setDrawHighlightCircleEnabled(true);
-                    avgSet.setDrawHorizontalHighlightIndicator(false);
-
-                    ArrayList<IRadarDataSet> sets = new ArrayList<>();
-                    sets.add(userSet);
-                    sets.add(maxSet);
-                    sets.add(minSet);
-                    sets.add(avgSet);
+                        sets = new ArrayList<>();
+                        sets.add(userSet);
+                        sets.add(maxSet);
+                        sets.add(minSet);
+                        sets.add(avgSet);
+                    }
 
                     RadarData data = new RadarData(sets);
                     data.setValueTextSize(8f);
                     data.setDrawValues(false);
                     data.setValueTextColor(Color.BLACK);
 
-                    userCntTextView.setText(userCnt+"명의 데이터 입니다.");
+                    userCntTextView.setText(userCnt + "명의 데이터 입니다.");
 
                     rchart.setData(data);
                     rchart.invalidate();
                 }
             }
         });
+    }
+
+
+    private void setChartAttribute(RadarDataSet dataSet, int color){
+        dataSet.setColor(color);
+        dataSet.setFillColor(color);
+        dataSet.setDrawFilled(true);
+        dataSet.setFillAlpha(180);
+        dataSet.setLineWidth(2f);
+        dataSet.setDrawHighlightCircleEnabled(true);
+        dataSet.setDrawHorizontalHighlightIndicator(false);
     }
 
 
@@ -254,6 +219,27 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
         Log.i("평균 long", Double.toString(sum));
         avg = sum/len;
         return avg;
+    }
+
+    protected ArrayList setEntry(ArrayList entry, double gradeVal, long volunVal, long overseaVal, long licenseVal, long internVal, long awardVal){
+        entry.add(new RadarEntry((float) gradeVal));
+        entry.add(new RadarEntry((float) volunVal));
+        entry.add(new RadarEntry((float) overseaVal));
+        entry.add(new RadarEntry((float) licenseVal));
+        entry.add(new RadarEntry((float) internVal));
+        entry.add(new RadarEntry((float) awardVal));
+        return entry;
+    }
+
+    protected void userChart(){
+        userSet = new RadarDataSet(setEntry(userEntry,user.getGrade(),user.getVolun(),user.getOverseas(),user.getLicense(),user.getIntern(),user.getAward()), user.getName());
+        userSet.setColor(Color.RED);
+        userSet.setFillColor(Color.RED);
+        userSet.setDrawFilled(true);
+        userSet.setFillAlpha(180);
+        userSet.setLineWidth(2f);
+        userSet.setDrawHighlightCircleEnabled(true);
+        userSet.setDrawHorizontalHighlightIndicator(false);
     }
 
 
