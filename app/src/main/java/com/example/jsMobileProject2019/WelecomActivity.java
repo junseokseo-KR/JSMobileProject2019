@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,14 +17,23 @@ public class WelecomActivity extends AppCompatActivity {
     TextView viewID;
     Intent intent;
     UserData user;
+    ImageView profileImg;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcom_page);
+        profileImg = findViewById(R.id.profileImg);
 
         intent = getIntent();
         user = (UserData) intent.getSerializableExtra("user");
+        if (user.getSex().equals("남자")){
+            profileImg.setImageResource(R.drawable.student_boy);
+        }
+        else if (user.getSex().equals("여자")){
+            profileImg.setImageResource(R.drawable.student_girl);
+        }
+
 
         viewID = findViewById(R.id.viewID);
         viewID.setText(user.getName());

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chivorn.smartmaterialspinner.SmartMaterialSpinner;
@@ -50,6 +51,7 @@ public class SelectCorpActivity extends AppCompatActivity{
     Intent intent;
     UserData user;
     String corpName, departName;
+    TextView corpView, departView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +68,9 @@ public class SelectCorpActivity extends AppCompatActivity{
 
         editSearch = (EditText) findViewById(R.id.editSearch);
         listView = (ListView) findViewById(R.id.listView);
+
+        corpView = findViewById(R.id.corpName);
+        departView = findViewById(R.id.departName);
 
         corpList = new ArrayList<>();
         searchList = new ArrayList<String>();
@@ -104,7 +109,6 @@ public class SelectCorpActivity extends AppCompatActivity{
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 String selectItem = corpList.get(position).toString();
-                                Log.i("arrItem",selectItem);
                                 editSearch.setText(selectItem);
                                 setCorpSpinner(selectItem);
                             }
@@ -142,7 +146,6 @@ public class SelectCorpActivity extends AppCompatActivity{
         }
         // 리스트 데이터가 변경되었으므로 아답터를 갱신하여 검색된 데이터를 화면에 보여준다.
         adapter.notifyDataSetChanged();
-        Log.i("adapter",corpList.toString());
     }
 
     protected void setCorpSpinner(String corp){
@@ -154,13 +157,14 @@ public class SelectCorpActivity extends AppCompatActivity{
                 ds = task.getResult();
                 if (ds.exists()){
                     final ArrayList<String> departList = (ArrayList<String>) ds.get("department");
-                    Log.i("department",departList.toString());
                     departSpinner.setItems(departList);
                     departSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             Toast.makeText(SelectCorpActivity.this, departList.get(position), Toast.LENGTH_SHORT).show();
                             departName = departList.get(position);
+                            corpView.setText(editSearch.getText());
+                            departView.setText(departName);
                         }
 
                         @Override
@@ -175,12 +179,18 @@ public class SelectCorpActivity extends AppCompatActivity{
 
     public void submitCorpDepart(View v){
         corpName = String.valueOf(editSearch.getText());
-        Log.i("departName",departName);
         intent = new Intent(SelectCorpActivity.this, SpecCompareBarChartActivity.class);
-        intent.putExtra("corpName",corpName);
-        intent.putExtra("departName",departName);
-        intent.putExtra("user",user);
-        Log.i("intentValue",user+" : "+corpName+" : "+departName);
+        if(corpName!=null) {
+            intent.putExtra("corpName", corpName);
+            intent.putExtra("departName", departName);
+            intent.putExtra("user", user);
+        }
+        else{
+            intent.putExtra("corpName", "all");
+            intent.putExtra("departName", "all");
+            intent.putExtra("user", user);
+            startActivity(intent);
+        }
         startActivity(intent);
     }
 }

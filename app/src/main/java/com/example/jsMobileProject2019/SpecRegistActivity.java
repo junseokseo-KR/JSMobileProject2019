@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -23,13 +25,15 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 public class SpecRegistActivity extends AppCompatActivity {
     MaterialEditText editGrade,editToeic,editName,editSchool,editLisence,editOversea,editAward,editIntern,editVolunteer;    //9
     Spinner editToeicSpeaking, editOPIc,editMajor,editField;    //2
-    String name,email,college,major, opic, toeicSpeaking,field; //6
+    String name,email,college,major, opic, toeicSpeaking,sex; //6
     long award, license,intern, overseas,toeic,volun;   //5
     double grade;   //1
     FirebaseFirestore db;
     Intent intent;
     UserData user;
     ArrayAdapter<CharSequence> adapter1, adapter2;
+    RadioGroup rg;
+    RadioButton rb_man, rb_woman;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +42,9 @@ public class SpecRegistActivity extends AppCompatActivity {
         intent = getIntent();
         db = FirebaseFirestore.getInstance();
         email = intent.getExtras().getString("email");
+        rg=findViewById(R.id.radioGroup);
+        rb_man = findViewById(R.id.radioMan);
+        rb_woman = findViewById(R.id.radioWoman);
 
         editVolunteer = findViewById(R.id.editVolunteer);
         editGrade = findViewById(R.id.editGrade);
@@ -74,7 +81,7 @@ public class SpecRegistActivity extends AppCompatActivity {
         });
     }
 
-    protected  void makeField(ArrayAdapter adap, Spinner editfield,int i){
+    protected void makeField(ArrayAdapter adap, Spinner editfield,int i){
         adap.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         if (i==0){
             editfield.setEnabled(false);
@@ -87,6 +94,7 @@ public class SpecRegistActivity extends AppCompatActivity {
     }
     public void createDoc(View view){
         DocumentReference doc = db.collection("userData").document(email);
+
         grade = Float.parseFloat(editGrade.getText().toString());
         toeic = Integer.parseInt(editToeic.getText().toString());
         award = Integer.parseInt(editAward.getText().toString());
@@ -99,9 +107,15 @@ public class SpecRegistActivity extends AppCompatActivity {
         major = editField.getSelectedItem().toString();
         opic = editOPIc.getSelectedItem().toString();
         toeicSpeaking = editToeicSpeaking.getSelectedItem().toString();
+        if (rb_man.isChecked()){
+            sex = rb_man.getText().toString();
+        }else if(rb_woman.isChecked()){
+            sex = rb_woman.getText().toString();
+        }
+
 
         //String email, String name, String college, String major, String opic, String toeicSpeaking, double grade, long toeic, long award, long license, long intern, long overseas
-        user = new UserData(email, name, college, major, opic, toeicSpeaking, grade, toeic, award, license, intern, overseas, volun);
+        user = new UserData(email, name, college, major, opic, toeicSpeaking, grade, toeic, award, license, intern, overseas, volun, sex);
 
         doc.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

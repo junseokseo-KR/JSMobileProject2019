@@ -37,6 +37,42 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:text="성별"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="15sp"
+            android:paddingRight="50dp"
+            android:textAlignment="center"/>
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:id="@+id/radioGroup">
+            <android.support.v7.widget.AppCompatRadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="남자"
+                android:paddingRight="30dp"
+                android:checked="true"
+                android:buttonTint="@color/indigo500"
+                android:id="@+id/radioMan"
+                />
+            <android.support.v7.widget.AppCompatRadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="여자"
+                android:id="@+id/radioWoman"
+                android:buttonTint="@color/accent"
+                />
+        </RadioGroup>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center">
         <com.rengwuxian.materialedittext.MaterialEditText
             android:layout_width="match_parent"
@@ -72,17 +108,6 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:textAlignment="center"/>
-        <!--<com.rengwuxian.materialedittext.MaterialEditText-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="4"-->
-            <!--android:id="@+id/editMajor"-->
-            <!--android:singleLine="true"-->
-            <!--app:met_floatingLabel="highlight"-->
-            <!--app:met_floatingLabelText="전공"-->
-            <!--app:met_floatingLabelAnimating="true"-->
-            <!--app:met_floatingLabelAlwaysShown="true"-->
-            <!--android:inputType="text"/>-->
     </LinearLayout>
     <LinearLayout
             android:layout_width="match_parent"

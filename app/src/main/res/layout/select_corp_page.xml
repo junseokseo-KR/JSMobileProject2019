@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -30,11 +30,44 @@
             app:smsp_showEmptyDropdown="true"
             app:smsp_enableFloatingLabel="true"
             app:smsp_floatingLabelText="부서명"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="버튼"
-            android:id="@+id/submitBtn"
-            android:onClick="submitCorpDepart"/>
     </LinearLayout>
-</LinearLayout>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/submitBtn"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp">
+        <TableRow>
+            <TextView
+                android:text="기업명"/>
+            <TextView
+                android:id="@+id/corpName"
+                android:layout_width="100dp"
+                android:textAlignment="center"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:text="부서명"/>
+            <TextView
+                android:id="@+id/departName"
+                android:layout_width="100dp"
+                android:textAlignment="center"/>
+        </TableRow>
+    </TableLayout>
+    <com.ornach.nobobutton.NoboButton
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="버튼"
+        android:id="@+id/submitBtn"
+        android:onClick="submitCorpDepart"
+        android:layout_weight="1"
+        android:textSize="20dp"
+        app:nb_text="차트 추출"
+        app:nb_borderWidth="2dp"
+        app:nb_backgroundColor="#759EDE"
+        app:nb_focusColor="#3989BA"
+        app:nb_textColor="@color/white"
+        app:nb_textSize="20sp"
+        app:nb_radius="5dp"/>
+</RelativeLayout>

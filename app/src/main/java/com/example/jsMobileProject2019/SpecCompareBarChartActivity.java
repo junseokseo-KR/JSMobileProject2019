@@ -1,6 +1,7 @@
 package com.example.jsMobileProject2019;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -44,8 +47,9 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
     private RadarChart rchart;
     private ArrayList<RadarEntry> userEntry, maxEntry, minEntry, avgEntry, saraminEntry;
     private ArrayList<Double> gradeArr;
-    private ArrayList<Long> internArr, licenseArr, awardArr, overseaArr,volunArr;
+    private ArrayList<Long> internArr, licenseArr, awardArr, overseaArr,toeicSArr;
     RadarDataSet userSet, maxSet, minSet, avgSet, saraminSet;
+    RadarData data;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,7 +61,7 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
         licenseArr = new ArrayList<>();
         awardArr = new ArrayList<>();
         overseaArr = new ArrayList<>();
-        volunArr = new ArrayList<>();
+        toeicSArr = new ArrayList<>();
         topTextView = findViewById(R.id.corpTextView);
         bottomTextView = findViewById(R.id.departTextView);
         userCntTextView = findViewById(R.id.userCntTextView);
@@ -81,7 +85,7 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
         xAxis.setYOffset(0f);
         xAxis.setXOffset(0f);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(){
-            private final String[] mActivites = new String[]{"학점","봉사활동","해외경험","자격증","인턴","수상"};
+            private final String[] mActivites = new String[]{"학점","토익스피킹","해외경험","자격증","인턴","수상"};
 
             @Override
             public String getFormattedValue(float value) {
@@ -102,11 +106,15 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setDrawInside(false);
+        l.setDrawInside(true);
         l.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
         l.setXEntrySpace(7f);
         l.setYEntrySpace(5f);
         l.setTextColor(Color.BLACK);
+        Log.i("x간격", Float.toString(l.getXEntrySpace()));
+        Log.i("y간격", Float.toString(l.getYEntrySpace()));
+        Log.i("x간격", Float.toString(l.getXEntrySpace()));
+        Log.i("y간격", Float.toString(l.getYEntrySpace()));
     }
 
     private void setData() {
@@ -127,7 +135,11 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         dataRef = db.collection("specData");
-        query = dataRef.whereEqualTo("corporation", corp).whereEqualTo("department", depart);
+        if (depart.equals("모든부서")){
+            query = dataRef.whereEqualTo("corporation",corp);
+        }else{
+            query = dataRef.whereEqualTo("corporation", corp).whereEqualTo("department", depart);
+        }
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -136,41 +148,46 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
                     ArrayList<IRadarDataSet> sets = new ArrayList<>();
                     for (QueryDocumentSnapshot qds : task.getResult()) {
                         gradeArr.add((double) qds.get("grade"));
-                        volunArr.add((long) qds.get("volun"));
+                        toeicSArr.add(loadToeicS((String) qds.get("toeicSpeaking")));
                         overseaArr.add((long) qds.get("overseas"));
                         internArr.add((long) qds.get("intern"));
                         awardArr.add((long) qds.get("award"));
                         licenseArr.add((long) qds.get("license"));
+                        Log.i("토익스피킹",toeicSArr.toString());
                         userCnt++;
                     }
+
+                    userChart();
                     if (userCnt==1){
-                        userChart();
+                        saraminSet = new RadarDataSet(setEntry(saraminEntry,gradeArr.get(0),toeicSArr.get(0),overseaArr.get(0),licenseArr.get(0),internArr.get(0),awardArr.get(0)), "사람인");
+                        Log.w("사람인 데이터", saraminSet.toString());
+                        setChartAttribute(saraminSet,Color.RED);
 
-                        saraminSet = new RadarDataSet(setEntry(saraminEntry,gradeArr.get(0),volunArr.get(0),overseaArr.get(0),licenseArr.get(0),internArr.get(0),awardArr.get(0)), "사람인");
-                        setChartAttribute(saraminSet,Color.rgb(121, 162, 175));
-
-                        sets.add(userSet);
                         sets.add(saraminSet);
-                    }else {
-                        userChart();
+                    }else if(userCnt==2){
+                        saraminSet = new RadarDataSet(setEntry(avgEntry,setDoubleAvg(gradeArr),setLongAvg(toeicSArr),setLongAvg(overseaArr),setLongAvg(licenseArr),setLongAvg(internArr),setLongAvg(awardArr)), "평균");
+                        setChartAttribute(saraminSet,Color.RED);
 
-                        maxSet = new RadarDataSet(setEntry(maxEntry,Collections.max(gradeArr),Collections.max(volunArr),Collections.max(overseaArr),Collections.max(licenseArr),Collections.max(internArr),Collections.max(awardArr)), "최고");
-                        setChartAttribute(maxSet,Color.rgb(121, 162, 175));
+                        sets.add(saraminSet);
+                    }
+                    else {
+                        maxSet = new RadarDataSet(setEntry(maxEntry,Collections.max(gradeArr),Collections.max(toeicSArr),Collections.max(overseaArr),Collections.max(licenseArr),Collections.max(internArr),Collections.max(awardArr)), "최고");
+                        setChartAttribute(maxSet,Color.rgb(183,71,42));
 
-                        minSet = new RadarDataSet(setEntry(minEntry,Collections.min(gradeArr),Collections.min(volunArr),Collections.min(overseaArr),Collections.min(licenseArr),Collections.min(internArr),Collections.min(awardArr)), "최저");
-                        setChartAttribute(minSet,Color.MAGENTA);
+                        minSet = new RadarDataSet(setEntry(minEntry,Collections.min(gradeArr),Collections.min(toeicSArr),Collections.min(overseaArr),Collections.min(licenseArr),Collections.min(internArr),Collections.min(awardArr)), "최저");
+                        setChartAttribute(minSet,Color.rgb(33,115,70));
 
-                        avgSet = new RadarDataSet(setEntry(avgEntry,setDoubleAvg(gradeArr),(long)setLongAvg(volunArr),(long)setLongAvg(overseaArr),(long)setLongAvg(licenseArr),(long)setLongAvg(internArr),(long)setLongAvg(awardArr)), "평균");
+                        avgSet = new RadarDataSet(setEntry(avgEntry,setDoubleAvg(gradeArr),setLongAvg(toeicSArr),setLongAvg(overseaArr),setLongAvg(licenseArr),setLongAvg(internArr),setLongAvg(awardArr)), "평균");
                         setChartAttribute(avgSet,Color.YELLOW);
+                        Log.i("평균 set", avgSet.toString());
 
-                        sets = new ArrayList<>();
-                        sets.add(userSet);
-                        sets.add(maxSet);
                         sets.add(minSet);
                         sets.add(avgSet);
+                        sets.add(maxSet);
                     }
+                    sets.add(userSet);
 
-                    RadarData data = new RadarData(sets);
+                    data = new RadarData(sets);
                     data.setValueTextSize(8f);
                     data.setDrawValues(false);
                     data.setValueTextColor(Color.BLACK);
@@ -179,19 +196,42 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
 
                     rchart.setData(data);
                     rchart.invalidate();
+                    rchart.setTouchEnabled(true);
                 }
             }
         });
     }
 
 
+
+    public void moveWidget(View v){
+        Bitmap chartBit = rchart.getChartBitmap();
+        Bitmap resized = null;
+        int resizedScale = 597;
+        int height = chartBit.getHeight();
+        int width = chartBit.getWidth();
+        Log.i("높이", Integer.toString(height));
+        Log.i("너비", Integer.toString(width));
+        Log.i("원본 크기", String.valueOf(chartBit.getByteCount()));
+        while(height>resizedScale){
+            resized = Bitmap.createScaledBitmap(chartBit,(width*resizedScale)/height,resizedScale,true);
+            height = resized.getHeight();
+            width = resized.getWidth();
+        }
+        intent = new Intent(SpecCompareBarChartActivity.this, chartwidget_provider.class);
+        Log.i("리사이즈 크기", String.valueOf(resized.getByteCount()));
+        intent.putExtra("bit",(Bitmap)resized);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent. FLAG_INCLUDE_STOPPED_PACKAGES);
+        sendBroadcast(intent);
+        Log.i("보내기 성공",intent.toString());
+    }
     private void setChartAttribute(RadarDataSet dataSet, int color){
         dataSet.setColor(color);
-        dataSet.setFillColor(color);
         dataSet.setDrawFilled(true);
-        dataSet.setFillAlpha(180);
+        dataSet.setFillColor(color);
+        dataSet.setFillAlpha(0);
         dataSet.setLineWidth(2f);
-        dataSet.setDrawHighlightCircleEnabled(true);
+        dataSet.setDrawHighlightCircleEnabled(false);
         dataSet.setDrawHorizontalHighlightIndicator(false);
     }
 
@@ -203,8 +243,9 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
         for (int i=0;i<len;i++){
             sum += (double)arr.get(i);
         }
-        Log.i("평균 double", Double.toString(sum));
+        Log.i("합 double", Double.toString(sum));
         avg = sum/len;
+        Log.i("평균 double", Double.toString(avg));
         return avg;
     }
     protected double setLongAvg(ArrayList arr){
@@ -214,16 +255,16 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
         double avg;
         for (int i=0;i<len;i++){
             sum += (long)arr.get(i);
-
         }
-        Log.i("평균 long", Double.toString(sum));
-        avg = sum/len;
+        Log.i("합 long", Double.toString(sum));
+        avg = (double)sum/len;
+        Log.i("평균 long", Double.toString(avg));
         return avg;
     }
 
-    protected ArrayList setEntry(ArrayList entry, double gradeVal, long volunVal, long overseaVal, long licenseVal, long internVal, long awardVal){
+    protected ArrayList setEntry(ArrayList entry, double gradeVal, double toeicSVal, double overseaVal, double licenseVal, double internVal, double awardVal){
         entry.add(new RadarEntry((float) gradeVal));
-        entry.add(new RadarEntry((float) volunVal));
+        entry.add(new RadarEntry((float) toeicSVal));
         entry.add(new RadarEntry((float) overseaVal));
         entry.add(new RadarEntry((float) licenseVal));
         entry.add(new RadarEntry((float) internVal));
@@ -232,15 +273,48 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
     }
 
     protected void userChart(){
-        userSet = new RadarDataSet(setEntry(userEntry,user.getGrade(),user.getVolun(),user.getOverseas(),user.getLicense(),user.getIntern(),user.getAward()), user.getName());
-        userSet.setColor(Color.RED);
-        userSet.setFillColor(Color.RED);
+        userSet = new RadarDataSet(setEntry(userEntry,user.getGrade(),loadToeicS(user.getToeicSpeaking()),user.getOverseas(),user.getLicense(),user.getIntern(),user.getAward()), user.getName());
+        userSet.setColor(Color.rgb(121, 162, 175));
+        userSet.setFillColor(Color.rgb(121, 162, 175));
         userSet.setDrawFilled(true);
-        userSet.setFillAlpha(180);
+        userSet.setFillAlpha(50);
         userSet.setLineWidth(2f);
         userSet.setDrawHighlightCircleEnabled(true);
         userSet.setDrawHorizontalHighlightIndicator(false);
     }
 
 
+    protected long loadToeicS(String toeicS){
+        long tsValue = 0;
+        switch (toeicS){
+            case "없음":
+                tsValue=0;
+                break;
+            case "L1":
+                tsValue=1;
+                break;
+            case "L2":
+                tsValue=2;
+                break;
+            case "L3":
+                tsValue=3;
+                break;
+            case "L4":
+                tsValue=4;
+                break;
+            case "L5":
+                tsValue=5;
+                break;
+            case "L6":
+                tsValue=6;
+                break;
+            case "L7":
+                tsValue=7;
+                break;
+            case "L8":
+                tsValue=8;
+                break;
+        }
+        return tsValue;
+    }
 }
