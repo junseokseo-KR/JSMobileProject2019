@@ -1,6 +1,5 @@
 package com.example.jsMobileProject2019;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;

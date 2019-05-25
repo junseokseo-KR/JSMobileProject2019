@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dd.processbutton.iml.ActionProcessButton;
@@ -24,6 +25,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class MainActivity extends AppCompatActivity {
     MaterialEditText editID, editPW;
+    TextView errorText;
     String email, password;
     FirebaseAuth mAuth;
     Intent intent;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         logBtn = findViewById(R.id.loginBtn);
         joinBtn = findViewById(R.id.joinBtn);
         db = FirebaseFirestore.getInstance();
+        errorText = findViewById(R.id.errorText);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("message");
@@ -93,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 //로그인 성공
                 if(task.isSuccessful()){
                     //데이터 불러오기
-                    logBtn.setText("데이터 불러오는 중");
+                    logBtn.setText("프로필 로딩중");
                     System.out.println("불러오기 성공");
                     dr = db.collection("userData").document(email);
                     System.out.println("dr 성공");
@@ -132,16 +135,24 @@ public class MainActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
                             logBtnState=-1;
                             logBtn.setProgress(logBtnState);
-                            logBtn.setText("데이터 불러오기 실패");
+                            logBtn.setText("불러오기 실패");
                         }
                     });
                 }else {
                     //로그인 실패
                     logBtnState=-1;
                     logBtn.setProgress(logBtnState);
-                    Log.w("에러",task.getException().getMessage());
                     if (task.getException().getMessage().equals("The email address is badly formatted.")){
-                        Toast.makeText(getApplicationContext(), "이메일 주소의 형식이 잘못되었습니다.", Toast.LENGTH_LONG).show();
+                        errorText.setText("이메일 형식이 잘못되었습니다.");
+                        editID.setText("");
+                        editPW.setText("");
+                    }
+                    else if (task.getException().getMessage().equals("There is no user record corresponding to this identifier. The user may have been deleted.")){
+                        errorText.setText("등록되지 않은 계정입니다.");
+                    }
+                    else if (task.getException().getMessage().equals("The password is invalid or the user does not have a password.")){
+                        errorText.setText("비밀번호가 틀렸습니다.");
+                        editPW.setText("");
                     }
                 }
             }
@@ -158,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
             joinBtn.setProgress(joinBtnState);
             createUser(email, password);
         }else{
-            Toast.makeText(getApplicationContext(),"아이디와 비밀번호를 모두 입력해야합니다.",Toast.LENGTH_LONG).show();
+            errorText.setText("아이디와 비밀번호를 모두 입력해야합니다.");
         }
     }
 
@@ -176,9 +187,17 @@ public class MainActivity extends AppCompatActivity {
                             // 회원가입 실패
                             joinBtnState=-1;
                             joinBtn.setProgress(joinBtnState);
-                            Toast.makeText(MainActivity.this, "존재하는 계정입니다.", Toast.LENGTH_SHORT).show();
-                            editID.setText("");
-                            editPW.setText("");
+                            if (task.getException().getMessage().equals("The email address is badly formatted.")){
+                                errorText.setText("이메일 형식이 잘못되었습니다.");
+                                editID.setText("");
+                                editPW.setText("");
+                            }else if (task.getException().getMessage().equals("The given password is invalid. [ Password should be at least 6 characters ]")){
+                                errorText.setText("비밀번호는 적어도 6자리 이상이어야 합니다.");
+                                editPW.setText("");
+                            }
+                            else if (task.getException().getMessage().equals("The email address is already in use by another account.")){
+                                errorText.setText("존재하는 계정입니다.");
+                            }
                         }
                     }
                 });

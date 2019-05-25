@@ -12,12 +12,13 @@
             android:id="@+id/editSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="원하는 회사를 검색하세요."/>
+            android:hint="검색 준비중.."
+            />
 
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="wrap_content"
             android:divider="#999999"
             android:dividerHeight="1dp">
         </ListView>

@@ -111,10 +111,6 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
         l.setXEntrySpace(7f);
         l.setYEntrySpace(5f);
         l.setTextColor(Color.BLACK);
-        Log.i("x간격", Float.toString(l.getXEntrySpace()));
-        Log.i("y간격", Float.toString(l.getYEntrySpace()));
-        Log.i("x간격", Float.toString(l.getXEntrySpace()));
-        Log.i("y간격", Float.toString(l.getYEntrySpace()));
     }
 
     private void setData() {
@@ -137,7 +133,7 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
         dataRef = db.collection("specData");
         if (depart.equals("모든부서")){
             query = dataRef.whereEqualTo("corporation",corp);
-        }else{
+        }else {
             query = dataRef.whereEqualTo("corporation", corp).whereEqualTo("department", depart);
         }
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -160,7 +156,6 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
                     userChart();
                     if (userCnt==1){
                         saraminSet = new RadarDataSet(setEntry(saraminEntry,gradeArr.get(0),toeicSArr.get(0),overseaArr.get(0),licenseArr.get(0),internArr.get(0),awardArr.get(0)), "사람인");
-                        Log.w("사람인 데이터", saraminSet.toString());
                         setChartAttribute(saraminSet,Color.RED);
 
                         sets.add(saraminSet);
@@ -179,7 +174,6 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
 
                         avgSet = new RadarDataSet(setEntry(avgEntry,setDoubleAvg(gradeArr),setLongAvg(toeicSArr),setLongAvg(overseaArr),setLongAvg(licenseArr),setLongAvg(internArr),setLongAvg(awardArr)), "평균");
                         setChartAttribute(avgSet,Color.YELLOW);
-                        Log.i("평균 set", avgSet.toString());
 
                         sets.add(minSet);
                         sets.add(avgSet);
@@ -210,20 +204,15 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
         int resizedScale = 597;
         int height = chartBit.getHeight();
         int width = chartBit.getWidth();
-        Log.i("높이", Integer.toString(height));
-        Log.i("너비", Integer.toString(width));
-        Log.i("원본 크기", String.valueOf(chartBit.getByteCount()));
         while(height>resizedScale){
             resized = Bitmap.createScaledBitmap(chartBit,(width*resizedScale)/height,resizedScale,true);
             height = resized.getHeight();
             width = resized.getWidth();
         }
         intent = new Intent(SpecCompareBarChartActivity.this, chartwidget_provider.class);
-        Log.i("리사이즈 크기", String.valueOf(resized.getByteCount()));
         intent.putExtra("bit",(Bitmap)resized);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent. FLAG_INCLUDE_STOPPED_PACKAGES);
         sendBroadcast(intent);
-        Log.i("보내기 성공",intent.toString());
     }
     private void setChartAttribute(RadarDataSet dataSet, int color){
         dataSet.setColor(color);
@@ -243,9 +232,7 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
         for (int i=0;i<len;i++){
             sum += (double)arr.get(i);
         }
-        Log.i("합 double", Double.toString(sum));
         avg = sum/len;
-        Log.i("평균 double", Double.toString(avg));
         return avg;
     }
     protected double setLongAvg(ArrayList arr){
@@ -256,9 +243,7 @@ public class SpecCompareBarChartActivity extends AppCompatActivity {
         for (int i=0;i<len;i++){
             sum += (long)arr.get(i);
         }
-        Log.i("합 long", Double.toString(sum));
         avg = (double)sum/len;
-        Log.i("평균 long", Double.toString(avg));
         return avg;
     }
 

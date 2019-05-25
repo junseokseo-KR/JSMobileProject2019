@@ -4,79 +4,117 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="300dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:layout_centerInParent="true">
-
+        android:id="@+id/topLayer"
+        android:background="@drawable/login_gradient"
+        >
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="239dp"
+            android:layout_width="60dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="30dp"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"
-            android:src="@drawable/background_icon" />
+            android:src="@drawable/icon"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:id="@+id/logoImg"
+            android:layout_marginBottom="50dp"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="331dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topLayer"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="-40dp"
+        android:background="@drawable/login_rounding"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="30dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="@font/nanumgothic"
+            android:text="LOGIN"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/nanumgothic"
+            android:textAlignment="center"
+            android:textSize="15sp"
+            android:id="@+id/errorText"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:id="@+id/loginID"
-            app:met_floatingLabelAlwaysShown="true"
-            app:met_floatingLabel="highlight"
-            app:met_floatingLabelText="이메일 계정"
-            app:met_floatingLabelAnimating="true"
-            app:met_singleLineEllipsis="true"
-            />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email@exam.com"
+            app:met_iconLeft="@drawable/mail"
+            app:met_primaryColor="@color/indigo500"
+            app:met_singleLineEllipsis="true" />
+
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:id="@+id/loginPW"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:hint="Password"
             android:inputType="textPassword"
-            app:met_floatingLabelAlwaysShown="true"
-            app:met_floatingLabel="highlight"
-            app:met_floatingLabelText="비밀번호"
-            app:met_floatingLabelAnimating="true"
-            android:layout_marginBottom="30dp"
-            app:met_singleLineEllipsis="true"
-            />
-        <com.dd.processbutton.iml.ActionProcessButton
+            app:met_checkCharactersCountAtBeginning="false"
+            app:met_iconLeft="@drawable/lock"
+            app:met_maxCharacters="20"
+            app:met_minCharacters="6"
+            app:met_primaryColor="@color/indigo500"
+            app:met_singleLineEllipsis="true" />
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="로그인"
-            android:id="@+id/loginBtn"
-            android:onClick="signIn"
-            android:layout_marginBottom="16dp"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            app:pb_colorComplete="@color/green_complete"
-            app:pb_colorNormal="@color/blue_normal"
-            app:pb_colorPressed="@color/blue_pressed"
-            app:pb_colorProgress="@color/purple_progress"
-            app:pb_textComplete="로그인 성공"
-            app:pb_textProgress="Loading"
-            app:pb_textError="로그인 실패"
-            app:pb_colorError="@color/red_error" />
-        <com.dd.processbutton.iml.ActionProcessButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="회원가입"
-            android:id="@+id/joinBtn"
-            android:onClick="signUp"
-            android:layout_marginBottom="16dp"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            app:pb_colorComplete="@color/green_complete"
-            app:pb_colorNormal="@color/colorPrimary"
-            app:pb_colorPressed="@color/colorPrimaryDark"
-            app:pb_colorProgress="@color/purple_progress"
-            app:pb_textComplete="회원가입 성공"
-            app:pb_textProgress="Loading"
-            app:pb_textError="회원가입 실패"
-            app:pb_colorError="@color/red_error" />
+            android:layout_gravity="center">
+            <com.dd.processbutton.iml.ActionProcessButton
+                android:id="@+id/joinBtn"
+                android:layout_width="135dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:fontFamily="@font/nanumgothic_b"
+                android:onClick="signUp"
+                android:text="회원가입"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                app:pb_colorComplete="@color/green_complete"
+                app:pb_colorError="@color/red_error"
+                app:pb_colorNormal="@color/indigo500"
+                app:pb_colorPressed="#1c31a0"
+                app:pb_colorProgress="@color/purple_progress"
+                app:pb_textComplete="회원가입 성공"
+                app:pb_textError="회원가입 실패"
+                app:pb_textProgress="회원가입 시도" />
+
+            <com.dd.processbutton.iml.ActionProcessButton
+                android:id="@+id/loginBtn"
+                android:layout_width="135dp"
+                android:layout_alignParentEnd="true"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nanumgothic_b"
+                android:onClick="signIn"
+                android:text="로그인"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                app:pb_colorComplete="@color/green_complete"
+                app:pb_colorError="@color/red_error"
+                app:pb_colorNormal="@color/blue_normal"
+                app:pb_colorPressed="@color/blue_pressed"
+                app:pb_colorProgress="@color/purple_progress"
+                app:pb_textComplete="로그인 성공"
+                app:pb_textError="로그인 실패"
+                app:pb_textProgress="Loading" />
+        </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>

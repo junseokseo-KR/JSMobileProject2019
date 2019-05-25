@@ -1,6 +1,8 @@
 package com.example.jsMobileProject2019;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -60,6 +62,8 @@ public class SelectCorpActivity extends AppCompatActivity{
 
         intent = getIntent();
         user = (UserData) intent.getSerializableExtra("user");
+        corpName = null;
+        departName = null;
 
         departSpinner = findViewById(R.id.departTest);
 
@@ -77,6 +81,7 @@ public class SelectCorpActivity extends AppCompatActivity{
 
         query = corpRef;
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @TargetApi(Build.VERSION_CODES.O)
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -90,6 +95,7 @@ public class SelectCorpActivity extends AppCompatActivity{
                 adapter = new SearchAdapter(corpList,SelectCorpActivity.this);
                 listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
                 listView.setAdapter(adapter);
+                editSearch.setHint("원하는 기업을 검색하세요.");
                 // input창에 검색어를 입력시 "addTextChangedListener" 이벤트 리스너를 정의한다.
                 editSearch.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -161,7 +167,6 @@ public class SelectCorpActivity extends AppCompatActivity{
                     departSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            Toast.makeText(SelectCorpActivity.this, departList.get(position), Toast.LENGTH_SHORT).show();
                             departName = departList.get(position);
                             corpView.setText(editSearch.getText());
                             departView.setText(departName);
@@ -178,19 +183,18 @@ public class SelectCorpActivity extends AppCompatActivity{
     }
 
     public void submitCorpDepart(View v){
-        corpName = String.valueOf(editSearch.getText());
-        intent = new Intent(SelectCorpActivity.this, SpecCompareBarChartActivity.class);
-        if(corpName!=null) {
+        corpName = corpView.getText().toString();
+        if (corpView.getText().equals("")){
+            Toast.makeText(getApplicationContext(),"원하는 기업과 부서를 선택하세요!", Toast.LENGTH_SHORT).show();
+            Log.i("결과", String.valueOf(corpView.getText().equals("")));
+        }else{
+            intent = new Intent(SelectCorpActivity.this, SpecCompareBarChartActivity.class);
+            Log.i("기업", corpName);
+            Log.i("부서",departName);
             intent.putExtra("corpName", corpName);
             intent.putExtra("departName", departName);
             intent.putExtra("user", user);
-        }
-        else{
-            intent.putExtra("corpName", "all");
-            intent.putExtra("departName", "all");
-            intent.putExtra("user", user);
             startActivity(intent);
         }
-        startActivity(intent);
     }
 }
