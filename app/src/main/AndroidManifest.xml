@@ -32,9 +32,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".WelecomActivity" />
         <activity android:name=".SpecRegistActivity" />
-        <activity android:name=".MySpecActivity" />
         <activity android:name=".SelectCorpActivity" />
-        <activity android:name=".SpecCompareBarChartActivity" />
         <activity android:name=".SpecModifyActivity"/>
     </application>
 

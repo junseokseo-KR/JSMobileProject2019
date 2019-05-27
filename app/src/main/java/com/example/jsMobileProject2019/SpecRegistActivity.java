@@ -92,6 +92,7 @@ public class SpecRegistActivity extends AppCompatActivity {
         intent = new Intent(SpecRegistActivity.this, WelecomActivity.class);
         intent.putExtra("user",user);
         startActivity(intent);
+        finish();
     }
 
 }

@@ -22,9 +22,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class SpecModifyActivity extends AppCompatActivity {
-    MaterialEditText editGrade,editToeic, editLisence,editOversea,editAward,editIntern;    //9
+    MaterialEditText editGrade,editToeic, editLisence,editOversea,editAward,editIntern, editSchool;    //9
     Spinner editToeicSpeaking, editOPIc;    //2
-    String email, opic, toeicSpeaking; //6
+    String email, opic, toeicSpeaking, college; //6
     long award, license,intern, overseas,toeic;   //5
     double grade;   //1
     FirebaseFirestore db;
@@ -45,6 +45,7 @@ public class SpecModifyActivity extends AppCompatActivity {
         rb_man = findViewById(R.id.radioMan);
         rb_woman = findViewById(R.id.radioWoman);
 
+        editSchool = findViewById(R.id.editSchool);
         editGrade = findViewById(R.id.editGrade);
         editToeic = findViewById(R.id.editToeic);
         editToeicSpeaking = findViewById(R.id.editToeicS);
@@ -54,6 +55,7 @@ public class SpecModifyActivity extends AppCompatActivity {
         editOPIc = findViewById(R.id.editOpic);
         editOversea = findViewById(R.id.editOversea);
 
+        editSchool.setText(user.getCollege());
         editGrade.setText((Math.round(user.getGrade()*100)/100.0)+"");
         editToeic.setText(user.getToeic()+"");
         editAward.setText(user.getAward()+"");
@@ -64,7 +66,7 @@ public class SpecModifyActivity extends AppCompatActivity {
 
     public void createDoc(View view){
         DocumentReference doc = db.collection("userData").document(email);
-
+        college = editSchool.getText().toString();
         grade = Float.parseFloat(editGrade.getText().toString());
         toeic = Integer.parseInt(editToeic.getText().toString());
         award = Integer.parseInt(editAward.getText().toString());
@@ -76,12 +78,16 @@ public class SpecModifyActivity extends AppCompatActivity {
 
 
         //String email, String name, String college, String major, String opic, String toeicSpeaking, double grade, long toeic, long award, long license, long intern, long overseas
-        user = new UserData(user.getEmail(), user.getName(), user.getCollege(), user.getOpic(), user.getToeicSpeaking(), grade, toeic, award, license, intern, overseas,user.getSex());
+        user = new UserData(user.getEmail(), user.getName(), college, user.getOpic(), user.getToeicSpeaking(), grade, toeic, award, license, intern, overseas,user.getSex());
 
         doc.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(getApplicationContext(),"스펙 등록 성공",Toast.LENGTH_LONG).show();
+                intent = new Intent(SpecModifyActivity.this, WelecomActivity.class);
+                intent.putExtra("user",user);
+                startActivity(intent);
+                finish();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -89,9 +95,6 @@ public class SpecModifyActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"스펙 등록 실패",Toast.LENGTH_LONG).show();
             }
         });
-        intent = new Intent(SpecModifyActivity.this, WelecomActivity.class);
-        intent.putExtra("user",user);
-        startActivity(intent);
     }
 
 }
