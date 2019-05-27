@@ -227,6 +227,7 @@
                 app:nb_textSize="20sp"
                 app:nb_fontIcon="&#xf007;"
                 app:nb_iconSize="16dp"
+                android:onClick="moveModifyProfile"
                 />
         </TableRow>
         <TableRow>

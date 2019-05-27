@@ -21,10 +21,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-public class SpecRegistActivity extends AppCompatActivity {
-    MaterialEditText editGrade,editToeic,editName,editSchool,editLisence,editOversea,editAward,editIntern;    //9
+public class SpecModifyActivity extends AppCompatActivity {
+    MaterialEditText editGrade,editToeic, editLisence,editOversea,editAward,editIntern;    //9
     Spinner editToeicSpeaking, editOPIc;    //2
-    String name,email,college, opic, toeicSpeaking,sex; //6
+    String email, opic, toeicSpeaking; //6
     long award, license,intern, overseas,toeic;   //5
     double grade;   //1
     FirebaseFirestore db;
@@ -36,23 +36,30 @@ public class SpecRegistActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.spec_regist_page);
+        setContentView(R.layout.spec_modify_page);
         intent = getIntent();
+        user = (UserData) intent.getSerializableExtra("user");
         db = FirebaseFirestore.getInstance();
-        email = intent.getExtras().getString("email");
+        email = user.getEmail();
         rg=findViewById(R.id.radioGroup);
         rb_man = findViewById(R.id.radioMan);
         rb_woman = findViewById(R.id.radioWoman);
+
         editGrade = findViewById(R.id.editGrade);
         editToeic = findViewById(R.id.editToeic);
         editToeicSpeaking = findViewById(R.id.editToeicS);
-        editSchool = findViewById(R.id.editSchool);
-        editName = findViewById(R.id.editName);
         editAward = findViewById(R.id.editAwards);
         editIntern = findViewById(R.id.editIntern);
         editLisence = findViewById(R.id.editLincense);
         editOPIc = findViewById(R.id.editOpic);
         editOversea = findViewById(R.id.editOversea);
+
+        editGrade.setText((Math.round(user.getGrade()*100)/100.0)+"");
+        editToeic.setText(user.getToeic()+"");
+        editAward.setText(user.getAward()+"");
+        editIntern.setText(user.getIntern()+"");
+        editLisence.setText(user.getLicense()+"");
+        editOversea.setText(user.getOverseas()+"");
     }
 
     public void createDoc(View view){
@@ -64,19 +71,12 @@ public class SpecRegistActivity extends AppCompatActivity {
         license = Integer.parseInt(editLisence.getText().toString());
         intern = Integer.parseInt(editIntern.getText().toString());
         overseas = Integer.parseInt(editOversea.getText().toString());
-        name = editName.getText().toString();
-        college = editSchool.getText().toString();
         opic = editOPIc.getSelectedItem().toString();
         toeicSpeaking = editToeicSpeaking.getSelectedItem().toString();
-        if (rb_man.isChecked()){
-            sex = rb_man.getText().toString();
-        }else if(rb_woman.isChecked()){
-            sex = rb_woman.getText().toString();
-        }
 
 
         //String email, String name, String college, String major, String opic, String toeicSpeaking, double grade, long toeic, long award, long license, long intern, long overseas
-        user = new UserData(email, name, college, opic, toeicSpeaking, grade, toeic, award, license, intern, overseas, sex);
+        user = new UserData(user.getEmail(), user.getName(), user.getCollege(), user.getOpic(), user.getToeicSpeaking(), grade, toeic, award, license, intern, overseas,user.getSex());
 
         doc.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -89,7 +89,7 @@ public class SpecRegistActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"스펙 등록 실패",Toast.LENGTH_LONG).show();
             }
         });
-        intent = new Intent(SpecRegistActivity.this, WelecomActivity.class);
+        intent = new Intent(SpecModifyActivity.this, WelecomActivity.class);
         intent.putExtra("user",user);
         startActivity(intent);
     }

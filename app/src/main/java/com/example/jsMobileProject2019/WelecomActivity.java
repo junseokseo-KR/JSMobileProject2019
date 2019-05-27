@@ -63,6 +63,11 @@ public class WelecomActivity extends AppCompatActivity {
         Log.i("인텐드", intent.toString());
         startActivity(intent);
     }
+    public void moveModifyProfile(View v){
+        intent = new Intent(WelecomActivity.this, SpecModifyActivity.class);
+        intent.putExtra("user", user);
+        startActivity(intent);
+    }
     public void logOut(View view){
         FirebaseAuth.getInstance().signOut();
         intent = new Intent(WelecomActivity.this, MainActivity.class);

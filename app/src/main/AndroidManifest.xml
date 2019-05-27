@@ -35,6 +35,7 @@
         <activity android:name=".MySpecActivity" />
         <activity android:name=".SelectCorpActivity" />
         <activity android:name=".SpecCompareBarChartActivity" />
+        <activity android:name=".SpecModifyActivity"/>
     </application>
 
 </manifest>

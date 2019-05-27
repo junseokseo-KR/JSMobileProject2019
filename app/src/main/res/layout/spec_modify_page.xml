@@ -18,58 +18,6 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:paddingBottom="30dp"/>
-        <LinearLayout
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center_horizontal">
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:id="@+id/editName"
-                android:singleLine="true"
-                app:met_floatingLabel="highlight"
-                app:met_floatingLabelText="이름"
-                app:met_floatingLabelAnimating="true"
-                app:met_floatingLabelAlwaysShown="true"
-                 />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="20dp">
-        <TextView
-            android:text="성별"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:textSize="15sp"
-            android:paddingRight="50dp"
-            android:textAlignment="center"/>
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:id="@+id/radioGroup">
-            <android.support.v7.widget.AppCompatRadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="남자"
-                android:paddingRight="30dp"
-                android:checked="true"
-                android:buttonTint="@color/indigo500"
-                android:id="@+id/radioMan"
-                />
-            <android.support.v7.widget.AppCompatRadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="여자"
-                android:id="@+id/radioWoman"
-                android:buttonTint="@color/accent"
-                />
-        </RadioGroup>
-    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -211,10 +159,11 @@
             android:text="등록"
             android:onClick="createDoc"
             android:layout_marginTop="50dp"
-            android:textSize="30dp"
-            app:nb_text="등록"
-            app:nb_radius="100dp"
-            app:nb_backgroundColor="#02aab0"
-            app:nb_textColor="@color/white"/>
+            app:nb_fontIcon="&#xf303;"
+            app:nb_text="수정"
+            app:nb_backgroundColor="#5fc3e4"
+            app:nb_textColor="@color/white"
+            app:nb_radius="10dp"
+            app:nb_textSize="20sp" />
     </LinearLayout>
 </ScrollView>

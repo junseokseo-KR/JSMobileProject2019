@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:id="@+id/radarChart"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

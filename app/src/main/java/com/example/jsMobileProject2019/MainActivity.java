@@ -1,12 +1,14 @@
 package com.example.jsMobileProject2019;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db;
     DocumentReference dr;
     DocumentSnapshot ds;
+    boolean saveLoginData;
+    SharedPreferences appData;
+    CheckBox saveUserInfo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,22 +55,22 @@ public class MainActivity extends AppCompatActivity {
         joinBtn = findViewById(R.id.joinBtn);
         db = FirebaseFirestore.getInstance();
         errorText = findViewById(R.id.errorText);
+        saveUserInfo = findViewById(R.id.saveUserInfo);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("message");
 
         myRef.setValue("Hello, World!");
-    }
+        appData = getSharedPreferences("appData",MODE_PRIVATE);
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        load();
 
-        editID.setText("");
-        editPW.setText("");
-        logBtn.setProgress(0);
-        joinBtn.setProgress(0);
-        editID.requestFocus();
+        if (saveLoginData){
+            editID.setText(email);
+            editPW.setText(password);
+            saveUserInfo.setChecked(saveLoginData);
+            Log.i("저장해라아","햇다");
+        }
     }
 
     //로그인버튼 함수
@@ -95,6 +100,11 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(email+" : "+password);
                 //로그인 성공
                 if(task.isSuccessful()){
+                    if (saveUserInfo.isChecked()){
+                        save();
+                    }else{
+                        initSave();
+                    }
                     //데이터 불러오기
                     logBtn.setText("프로필 로딩중");
                     System.out.println("불러오기 성공");
@@ -114,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                                 System.out.println("logBtn 프로세스 변경");
                                 logBtn.setText("로그인 성공");
                                 System.out.println(ds.getString("name"));
-                                user = new UserData(ds.getString("email"), ds.getString("name"),ds.getString("college"),ds.getString("major"),ds.getString("opic"),ds.getString("toeicSpeaking"), (double) ds.get("grade"), (long) ds.get("toeic"), (long) ds.get("award"), (long) ds.get("license"), (long) ds.get("intern"),(long) ds.get("overseas"), (long) ds.get("volun"), ds.getString("sex"));
+                                user = new UserData(ds.getString("email"), ds.getString("name"),ds.getString("college"),ds.getString("opic"),ds.getString("toeicSpeaking"), (double) ds.get("grade"), (long) ds.get("toeic"), (long) ds.get("award"), (long) ds.get("license"), (long) ds.get("intern"),(long) ds.get("overseas"), ds.getString("sex"));
                                 System.out.print(user);
                                 intent = new Intent( MainActivity.this, WelecomActivity.class);
                                 intent.putExtra("user", user);
@@ -203,4 +213,29 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    private void save(){
+        SharedPreferences.Editor editor = appData.edit();
+
+        editor.putBoolean("SAVE_LOGIN_DATA",saveUserInfo.isChecked());
+        editor.putString("EMAIL",editID.getText().toString().trim());
+        editor.putString("PASSWORD",editPW.getText().toString().trim());
+
+        editor.apply();
+    }
+
+    private void initSave(){
+        SharedPreferences.Editor editor = appData.edit();
+
+        editor.putBoolean("SAVE_LOGIN_DATA",saveUserInfo.isChecked());
+        editor.putString("EMAIL","");
+        editor.putString("PASSWORD","");
+
+        editor.apply();
+    }
+
+    private void load(){
+        saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA", false);
+        email = appData.getString("EMAIL", "");
+        password = appData.getString("PASSWORD", "");
+    }
 }

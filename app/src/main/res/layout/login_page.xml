@@ -70,7 +70,6 @@
             android:inputType="textPassword"
             app:met_checkCharactersCountAtBeginning="false"
             app:met_iconLeft="@drawable/lock"
-            app:met_maxCharacters="20"
             app:met_minCharacters="6"
             app:met_primaryColor="@color/indigo500"
             app:met_singleLineEllipsis="true" />
@@ -97,6 +96,16 @@
                 app:pb_textError="회원가입 실패"
                 app:pb_textProgress="회원가입 시도" />
 
+            <android.support.v7.widget.AppCompatCheckBox
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="로그인 정보 기억"
+                android:id="@+id/saveUserInfo"
+                android:layout_below="@id/loginBtn"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                />
             <com.dd.processbutton.iml.ActionProcessButton
                 android:id="@+id/loginBtn"
                 android:layout_width="135dp"
