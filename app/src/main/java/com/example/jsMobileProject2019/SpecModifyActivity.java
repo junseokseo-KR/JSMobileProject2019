@@ -5,10 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -64,7 +61,40 @@ public class SpecModifyActivity extends AppCompatActivity {
         editOversea.setText(user.getOverseas()+"");
     }
 
-    public void createDoc(View view){
+    public void clickModify(View v){
+        if (isStrNull(editSchool)){
+            editSchool.setError("학교를 입력하세요!");
+        }
+        else if(Float.parseFloat(editGrade.getText().toString())>4.5){
+            editGrade.setError("학점은 4.5이하 까지만 입력 가능합니다.");
+        }
+        else if (isStrNull(editGrade)){
+            editGrade.setError("학점을 입력하세요!");
+        }
+        else if (Integer.parseInt(editToeic.getText().toString())>990){
+            editToeic.setError("토익점수는 최대 990점까지 입력 가능합니다.");
+        }
+        else if (isStrNull(editToeic)){
+            editToeic.setError("토익점수를 입력하세요!");
+        }
+        else if (isStrNull(editAward)){
+            editAward.setError("수상경험을 입력하세요!");
+        }
+        else if (isStrNull(editIntern)){
+            editIntern.setError("인턴경력을 입력하세요!");
+        }
+        else if (isStrNull(editOversea)){
+            editOversea.setError("해외경험을 입력하세요!");
+        }
+        else if (isStrNull(editLisence)){
+            editLisence.setError("자격증 개수를 입력하세요!");
+        }
+        else {
+            modifyProfile();
+        }
+    }
+
+    private void modifyProfile(){
         DocumentReference doc = db.collection("userData").document(email);
         college = editSchool.getText().toString();
         grade = Float.parseFloat(editGrade.getText().toString());
@@ -83,8 +113,8 @@ public class SpecModifyActivity extends AppCompatActivity {
         doc.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(getApplicationContext(),"스펙 등록 성공",Toast.LENGTH_LONG).show();
-                intent = new Intent(SpecModifyActivity.this, WelecomActivity.class);
+                Toast.makeText(getApplicationContext(),"스펙 수정 성공",Toast.LENGTH_LONG).show();
+                intent = new Intent(SpecModifyActivity.this, WelcomActivity.class);
                 intent.putExtra("user",user);
                 startActivity(intent);
                 finish();
@@ -92,9 +122,12 @@ public class SpecModifyActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(),"스펙 등록 실패",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"스펙 수정 실패",Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    private boolean isStrNull(MaterialEditText m){
+        return m.getText().toString().equals("");
+    }
 }

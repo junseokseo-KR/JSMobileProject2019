@@ -1,20 +1,17 @@
 package com.example.jsMobileProject2019;
 
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.ornach.nobobutton.NoboButton;
 
-public class WelecomActivity extends AppCompatActivity {
+public class WelcomActivity extends AppCompatActivity {
     TextView viewID,viewSchool,myGrade,myToeic,myToeicS,myAward,myIntern,myOversea,myLicense,myOpic;
     Intent intent;
     UserData user;
@@ -58,19 +55,19 @@ public class WelecomActivity extends AppCompatActivity {
     }
     //비교바차트 액티비티 이동
     public void moveBarChart(View v){
-        intent = new Intent(WelecomActivity.this, SelectCorpActivity.class);
+        intent = new Intent(WelcomActivity.this, SelectCorpActivity.class);
         intent.putExtra("user", user);
         Log.i("인텐드", intent.toString());
         startActivity(intent);
     }
     public void moveModifyProfile(View v){
-        intent = new Intent(WelecomActivity.this, SpecModifyActivity.class);
+        intent = new Intent(WelcomActivity.this, SpecModifyActivity.class);
         intent.putExtra("user", user);
         startActivity(intent);
     }
     public void logOut(View view){
         FirebaseAuth.getInstance().signOut();
-        intent = new Intent(WelecomActivity.this, MainActivity.class);
+        intent = new Intent(WelcomActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }

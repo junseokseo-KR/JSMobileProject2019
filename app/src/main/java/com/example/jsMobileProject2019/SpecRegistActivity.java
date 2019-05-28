@@ -5,10 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -55,7 +52,43 @@ public class SpecRegistActivity extends AppCompatActivity {
         editOversea = findViewById(R.id.editOversea);
     }
 
-    public void createDoc(View view){
+    public void clickRegist(View v){
+        if (isStrNull(editName)){
+            editName.setError("이름을 입력하세요!");
+        }
+        else if (isStrNull(editSchool)){
+            editSchool.setError("학교를 입력하세요!");
+        }
+        else if(Float.parseFloat(editGrade.getText().toString())>4.5){
+            editGrade.setError("학점은 4.5이하 까지만 입력 가능합니다.");
+        }
+        else if (isStrNull(editGrade)){
+            editGrade.setError("학점을 입력하세요!");
+        }
+        else if (Integer.parseInt(editToeic.getText().toString())>990){
+            editToeic.setError("토익점수는 최대 990점까지 입력 가능합니다.");
+        }
+        else if (isStrNull(editToeic)){
+            editToeic.setError("토익점수를 입력하세요!");
+        }
+        else if (isStrNull(editAward)){
+            editAward.setError("수상경험을 입력하세요!");
+        }
+        else if (isStrNull(editIntern)){
+            editIntern.setError("인턴경력을 입력하세요!");
+        }
+        else if (isStrNull(editOversea)){
+            editOversea.setError("해외경험을 입력하세요!");
+        }
+        else if (isStrNull(editLisence)){
+            editLisence.setError("자격증 개수를 입력하세요!");
+        }
+        else {
+            registUser();
+        }
+    }
+
+    private void registUser(){
         DocumentReference doc = db.collection("userData").document(email);
 
         grade = Float.parseFloat(editGrade.getText().toString());
@@ -89,10 +122,14 @@ public class SpecRegistActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"스펙 등록 실패",Toast.LENGTH_LONG).show();
             }
         });
-        intent = new Intent(SpecRegistActivity.this, WelecomActivity.class);
+        intent = new Intent(SpecRegistActivity.this, WelcomActivity.class);
         intent.putExtra("user",user);
         startActivity(intent);
         finish();
+    }
+
+    private boolean isStrNull(MaterialEditText m){
+        return m.getText().toString().equals("");
     }
 
 }

@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".WelecomActivity" />
+        <activity android:name=".WelcomActivity" />
         <activity android:name=".SpecRegistActivity" />
         <activity android:name=".SelectCorpActivity" />
         <activity android:name=".SpecModifyActivity"/>

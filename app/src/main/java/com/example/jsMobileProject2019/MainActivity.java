@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                                 System.out.println(ds.getString("name"));
                                 user = new UserData(ds.getString("email"), ds.getString("name"),ds.getString("college"),ds.getString("opic"),ds.getString("toeicSpeaking"), (double) ds.get("grade"), (long) ds.get("toeic"), (long) ds.get("award"), (long) ds.get("license"), (long) ds.get("intern"),(long) ds.get("overseas"), ds.getString("sex"));
                                 System.out.print(user);
-                                intent = new Intent( MainActivity.this, WelecomActivity.class);
+                                intent = new Intent( MainActivity.this, WelcomActivity.class);
                                 intent.putExtra("user", user);
                                 startActivity(intent);
                             } else {
