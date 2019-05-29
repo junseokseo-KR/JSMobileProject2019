@@ -80,6 +80,8 @@ public class SelectCorpActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_corp_page);
 
+
+
         makeChart = false;
         intent = getIntent();
         user = (UserData) intent.getSerializableExtra("user");
@@ -280,6 +282,13 @@ public class SelectCorpActivity extends AppCompatActivity{
                     rchart.setData(data);
                     rchart.invalidate();
                     rchart.setTouchEnabled(true);
+
+                    gradeArr.clear();
+                    toeicSArr.clear();
+                    overseaArr.clear();
+                    licenseArr.clear();
+                    internArr.clear();
+                    awardArr.clear();
                 }
             }
         });

@@ -108,7 +108,7 @@ public class SpecModifyActivity extends AppCompatActivity {
 
 
         //String email, String name, String college, String major, String opic, String toeicSpeaking, double grade, long toeic, long award, long license, long intern, long overseas
-        user = new UserData(user.getEmail(), user.getName(), college, user.getOpic(), user.getToeicSpeaking(), grade, toeic, award, license, intern, overseas,user.getSex());
+        user = new UserData(user.getEmail(), user.getName(), college, opic, toeicSpeaking, grade, toeic, award, license, intern, overseas,user.getSex());
 
         doc.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
