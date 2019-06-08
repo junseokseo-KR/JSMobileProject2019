@@ -57,7 +57,6 @@ public class WelcomActivity extends AppCompatActivity {
     public void moveBarChart(View v){
         intent = new Intent(WelcomActivity.this, SelectCorpActivity.class);
         intent.putExtra("user", user);
-        Log.i("인텐드", intent.toString());
         startActivity(intent);
     }
     public void moveModifyProfile(View v){

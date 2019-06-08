@@ -79,9 +79,6 @@ public class SelectCorpActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_corp_page);
-
-
-
         makeChart = false;
         intent = getIntent();
         user = (UserData) intent.getSerializableExtra("user");
@@ -210,15 +207,6 @@ public class SelectCorpActivity extends AppCompatActivity{
         minEntry = new ArrayList<>();
         avgEntry = new ArrayList<>();
 
-//        intent = getIntent();
-//        user = (UserData) intent.getSerializableExtra("user");
-//        corp = intent.getStringExtra("corpName");
-//        depart = intent.getStringExtra("departName");
-
-//        topTextView.setText(corpName);
-//        bottomTextView.setText(departName);
-//        userCntTextView.setText("데이터를 불러오는 중...");
-
         db = FirebaseFirestore.getInstance();
         dataRef = db.collection("specData");
         if (departName.equals("모든부서")){
@@ -226,13 +214,15 @@ public class SelectCorpActivity extends AppCompatActivity{
         }else {
             query = dataRef.whereEqualTo("corporation", corpName).whereEqualTo("department", departName);
         }
+        //설정한 기업명과 부서명을 통한 데이터 검색
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "데이터 불러오기 성공", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "데이터 불러오기 성공", Toast.LENGTH_SHORT).show();
                     ArrayList<IRadarDataSet> sets = new ArrayList<>();
                     for (QueryDocumentSnapshot qds : task.getResult()) {
+                        //찾은 데이터들을 각각의 리스트에 저장
                         gradeArr.add((double) qds.get("grade"));
                         toeicSArr.add(loadToeicS((String) qds.get("toeicSpeaking")));
                         overseaArr.add((long) qds.get("overseas"));
@@ -240,28 +230,35 @@ public class SelectCorpActivity extends AppCompatActivity{
                         awardArr.add((long) qds.get("award"));
                         licenseArr.add((long) qds.get("license"));
                         Log.i("토익스피킹",toeicSArr.toString());
+                        //찾은 데이터의 수
                         userCnt++;
                     }
 
+                    //사용자 스펙 데이터 저장 메서드
                     userChart();
+                    //1명의 데이터일 경우
                     if (userCnt==1){
                         saraminSet = new RadarDataSet(setEntry(saraminEntry,gradeArr.get(0),toeicSArr.get(0),overseaArr.get(0),licenseArr.get(0),internArr.get(0),awardArr.get(0)), "사람인");
+                        //차트 설정 메서드(데이터세트, 설정 색상)
                         setChartAttribute(saraminSet,Color.RED);
-
+                        //데이터 세트 추가
                         sets.add(saraminSet);
-                    }else if(userCnt==2){
+                    }else if(userCnt==2){   //2명의 데이터 일 경우
                         saraminSet = new RadarDataSet(setEntry(avgEntry,setDoubleAvg(gradeArr),setLongAvg(toeicSArr),setLongAvg(overseaArr),setLongAvg(licenseArr),setLongAvg(internArr),setLongAvg(awardArr)), "평균");
                         setChartAttribute(saraminSet,Color.RED);
 
                         sets.add(saraminSet);
                     }
                     else {
+                        //최댓값 Set
                         maxSet = new RadarDataSet(setEntry(maxEntry, Collections.max(gradeArr),Collections.max(toeicSArr),Collections.max(overseaArr),Collections.max(licenseArr),Collections.max(internArr),Collections.max(awardArr)), "최고");
                         setChartAttribute(maxSet,Color.rgb(183,71,42));
 
+                        //최솟값 Set
                         minSet = new RadarDataSet(setEntry(minEntry,Collections.min(gradeArr),Collections.min(toeicSArr),Collections.min(overseaArr),Collections.min(licenseArr),Collections.min(internArr),Collections.min(awardArr)), "최저");
                         setChartAttribute(minSet,Color.rgb(33,115,70));
 
+                        //평균값 Set
                         avgSet = new RadarDataSet(setEntry(avgEntry,setDoubleAvg(gradeArr),setLongAvg(toeicSArr),setLongAvg(overseaArr),setLongAvg(licenseArr),setLongAvg(internArr),setLongAvg(awardArr)), "평균");
                         setChartAttribute(avgSet,Color.YELLOW);
 
@@ -271,6 +268,7 @@ public class SelectCorpActivity extends AppCompatActivity{
                     }
                     sets.add(userSet);
 
+                    //레이더 데이터 객체 생성 및 설정
                     data = new RadarData(sets);
                     data.setValueTextSize(8f);
                     data.setDrawValues(false);
@@ -279,10 +277,13 @@ public class SelectCorpActivity extends AppCompatActivity{
                     userCntTextView.setText(userCnt + "명");
 
                     makeChart = true;
+
+                    //추출 및 판별된 데이터 차트에 설정
                     rchart.setData(data);
                     rchart.invalidate();
                     rchart.setTouchEnabled(true);
 
+                    //각각의 데이터 리스트 초기화
                     gradeArr.clear();
                     toeicSArr.clear();
                     overseaArr.clear();

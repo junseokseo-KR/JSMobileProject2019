@@ -61,15 +61,15 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference myRef = database.getReference("message");
 
         myRef.setValue("Hello, World!");
+        //계정 저장을 위한 객체
         appData = getSharedPreferences("appData",MODE_PRIVATE);
-
+        //계정 불러오기 메서드 호출
         load();
 
         if (saveLoginData){
             editID.setText(email);
             editPW.setText(password);
             saveUserInfo.setChecked(saveLoginData);
-            Log.i("저장해라아","햇다");
         }
     }
 
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //로그인
+    //로그인 메서드
     private void requestLogin(final String email, final String password){
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                             ds = task.getResult();
 
                             System.out.println("ds 성공");
+                            // 프로필이 존재한다면 user 객체의 형태로 WelecomeActivity로 넘겨준다.
                             if (ds.exists()) {
                                 System.out.println("ds 존재");
                                 logBtnState=100;
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                                 intent = new Intent( MainActivity.this, WelcomActivity.class);
                                 intent.putExtra("user", user);
                                 startActivity(intent);
-                            } else {
+                            } else {    //프로필이 존재하지 않는다면 email 값만 SpecRegistActivity로 넘겨준다.
                                 System.out.println("No Data");
                                 logBtnState=-1;
                                 logBtn.setProgress(logBtnState);
@@ -152,14 +153,17 @@ public class MainActivity extends AppCompatActivity {
                     //로그인 실패
                     logBtnState=-1;
                     logBtn.setProgress(logBtnState);
+                    //이메일 형식 오류
                     if (task.getException().getMessage().equals("The email address is badly formatted.")){
                         errorText.setText("이메일 형식이 잘못되었습니다.");
                         editID.setText("");
                         editPW.setText("");
                     }
+                    //미등록 계정
                     else if (task.getException().getMessage().equals("There is no user record corresponding to this identifier. The user may have been deleted.")){
                         errorText.setText("등록되지 않은 계정입니다.");
                     }
+                    //비밀번호 오류
                     else if (task.getException().getMessage().equals("The password is invalid or the user does not have a password.")){
                         errorText.setText("비밀번호가 틀렸습니다.");
                         editPW.setText("");
@@ -173,12 +177,13 @@ public class MainActivity extends AppCompatActivity {
     public void signUp(View view){
         email = editID.getText().toString();
         password = editPW.getText().toString();
-
+        //이메일과 비밀번호가 입력되어있을 경우
         if(!email.equals("")&&!password.equals("")) {
             joinBtnState=50;
             joinBtn.setProgress(joinBtnState);
+            //회원가입 메서드 호출
             createUser(email, password);
-        }else{
+        }else{  //입력되어있지 않을 경우
             errorText.setText("아이디와 비밀번호를 모두 입력해야합니다.");
         }
     }
@@ -213,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    //계정 저장 메서드
     private void save(){
         SharedPreferences.Editor editor = appData.edit();
 
@@ -222,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
         editor.apply();
     }
-
+    //계정 저장 초기화 메서드
     private void initSave(){
         SharedPreferences.Editor editor = appData.edit();
 
@@ -232,8 +238,9 @@ public class MainActivity extends AppCompatActivity {
 
         editor.apply();
     }
-
-    private void load(){
+    //계정 불러오기 메서드
+   private void load(){
+        //계정이 존재하면 불러오기, 존재하지 않는다면 default값으로 공백과 false 값이 설정된다.
         saveLoginData = appData.getBoolean("SAVE_LOGIN_DATA", false);
         email = appData.getString("EMAIL", "");
         password = appData.getString("PASSWORD", "");

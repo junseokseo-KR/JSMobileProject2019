@@ -24,7 +24,7 @@ public class chartwidget_provider extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        // Construct the RemoteViews object
+        //위젯의 초기 설정
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.chart_widget);
         views.setImageViewResource(R.id.widgetChart, R.color.white);
         views.setTextViewText(R.id.widgetText, "로그인하여 차트를 등록해보세요!");
@@ -62,6 +62,7 @@ public class chartwidget_provider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        //위젯 등록 버튼 클릭시 보내졌던 비트맵이미지를 위젯의 이미지로 등록한다.
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.chart_widget);
         super.onReceive(context, intent);
         if(intent.getExtras().get("bit")!=null){

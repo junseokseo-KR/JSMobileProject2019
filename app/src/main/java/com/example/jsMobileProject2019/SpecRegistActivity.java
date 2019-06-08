@@ -52,7 +52,9 @@ public class SpecRegistActivity extends AppCompatActivity {
         editOversea = findViewById(R.id.editOversea);
     }
 
-    public void clickRegist(View v){
+    //입력 체크 메서드드
+   public void clickRegist(View v){
+        //프로필 입력란에 입력되지 않는 항목이 있다면 에러 메시지를 띄워준다.
         if (isStrNull(editName)){
             editName.setError("이름을 입력하세요!");
         }
@@ -88,9 +90,10 @@ public class SpecRegistActivity extends AppCompatActivity {
         }
     }
 
+    //프로필 등록 메서드
     private void registUser(){
+        //입력란에 입력된 값들을 userData 컬렉션 각각의 이메일 도큐먼트로 저장한다.
         DocumentReference doc = db.collection("userData").document(email);
-
         grade = Float.parseFloat(editGrade.getText().toString());
         toeic = Integer.parseInt(editToeic.getText().toString());
         award = Integer.parseInt(editAward.getText().toString());
@@ -101,16 +104,16 @@ public class SpecRegistActivity extends AppCompatActivity {
         college = editSchool.getText().toString();
         opic = editOPIc.getSelectedItem().toString();
         toeicSpeaking = editToeicSpeaking.getSelectedItem().toString();
+        // 체크박스의 선택 유무로 성별을 지정한다.
         if (rb_man.isChecked()){
             sex = rb_man.getText().toString();
         }else if(rb_woman.isChecked()){
             sex = rb_woman.getText().toString();
         }
 
-
-        //String email, String name, String college, String major, String opic, String toeicSpeaking, double grade, long toeic, long award, long license, long intern, long overseas
         user = new UserData(email, name, college, opic, toeicSpeaking, grade, toeic, award, license, intern, overseas, sex);
 
+        //등록의 성공 유무를 Toast 메시지로 보여준다.
         doc.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -128,6 +131,7 @@ public class SpecRegistActivity extends AppCompatActivity {
         finish();
     }
 
+    //값 입력 판별 메서드
     private boolean isStrNull(MaterialEditText m){
         return m.getText().toString().equals("");
     }
